@@ -2,7 +2,7 @@
 
 module Roda::RodaPlugins::Agent
   module Operations
-    def create!(name)
+    def create_agent!(name)
       klass = agent_class!(name)
       ##
       # 'self.scope' is resolved to an instance of Roda.
@@ -11,7 +11,7 @@ module Roda::RodaPlugins::Agent
       {ok: true, id: agent.id}
     end
 
-    def update!(name, params, sse)
+    def update_agent!(name, params, sse)
       klass = agent_class!(name)
       ##
       # 'self.scope' is resolved to an instance of Roda.
@@ -26,7 +26,7 @@ module Roda::RodaPlugins::Agent
       stream&.error(message: "internal server error")
     end
 
-    def destroy!(name)
+    def destroy_agent!(name)
       klass = agent_class!(name)
       ##
       # 'self.scope' is resolved to an instance of Roda.

@@ -65,9 +65,9 @@ module Roda::RodaPlugins
         path = LLM::Roda.path
         on(path) do
           on String do |name|
-            post(true)   { [agent_scope!(name).new(self).check_csrf!, create!(name)].last }
-            sse          { |sse| update!(name, params, sse) }
-            delete(true) { [agent_scope!(name).new(self).check_csrf!, destroy!(name)].last }
+            post(true)   { [agent_scope!(name).new(self).check_csrf!, create_agent!(name)].last }
+            sse          { |sse| update_agent!(name, params, sse) }
+            delete(true) { [agent_scope!(name).new(self).check_csrf!, destroy_agent!(name)].last }
           end
         end
       end
