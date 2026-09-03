@@ -19,6 +19,7 @@ module Roda::RodaPlugins::Agent
     # This callback is called when a stream is about to start.
     # @return [void]
     def hello
+      @io.write(": connected\n\n")
     end
 
     ##
@@ -27,6 +28,7 @@ module Roda::RodaPlugins::Agent
     #  A response object.
     # @return [void]
     def goodbye(res:)
+      emit("done", answer: res.content)
     end
 
     ##
