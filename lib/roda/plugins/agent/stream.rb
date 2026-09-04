@@ -28,7 +28,7 @@ module Roda::RodaPlugins::Agent
     #  A response object.
     # @return [void]
     def goodbye(res:)
-      emit("done", answer: res.content)
+      emit("onGoodbye", answer: res.content)
     end
 
     ##
@@ -36,7 +36,7 @@ module Roda::RodaPlugins::Agent
     # @param [String] text
     # @return [void]
     def on_content(text)
-      emit("content", text:)
+      emit("onContent", text:)
     end
 
     ##
@@ -44,23 +44,23 @@ module Roda::RodaPlugins::Agent
     # @param [LLM::Function] tool
     # @return [void]
     def on_tool_call(tool)
-      emit("tool_call", id: tool.id, name: tool.name, arguments: tool.arguments.to_h)
+      emit("onToolCall", id: tool.id, name: tool.name, arguments: tool.arguments.to_h)
     end
 
     ##
     # This callback is called when a tool call returns.
     # @param [LLM::Function] tool
-    # @param [LLM::Function::Return] result
+    # @param [LLM::Function::Return] fnreturn
     # @return [void]
-    def on_tool_return(tool, result)
-      emit("tool_return", id: tool.id, name: tool.name, ok: !result.error?)
+    def on_tool_return(tool, fnreturn)
+      emit("onToolReturn", id: tool.id, name: tool.name, error: fnreturn.error?)
     end
 
     ##
     # Emits an error
     # @return [void]
     def error(message:)
-      emit("failed", error: message)
+      emit("onToolError", error: message)
     end
 
     private
