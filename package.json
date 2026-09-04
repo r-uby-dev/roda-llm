@@ -1,0 +1,17 @@
+{
+  "name": "roda-llm",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Agent console web component for roda-llm",
+  "scripts": {
+    "build": "esbuild lib/roda/plugins/agent/assets/web-component.js --bundle --minify --format=iife --outfile=public/roda-llm/web-component.js",
+    "watch": "esbuild lib/roda/plugins/agent/assets/web-component.js --bundle --minify --format=iife --outfile=public/roda-llm/web-component.js --watch"
+  },
+  "dependencies": {
+    "highlight.js": "^11.11.1",
+    "marked": "^15.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}
