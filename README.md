@@ -109,6 +109,11 @@ that determine how an agent is found, saved, and created. The
 builtin session scope uses a session-backed store to link the
 agent's database record to a browser-based user session.
 
+The `route_csrf` plugin is optional but recommended to prevent
+cross forgery attacks. It is largely optional because outside
+Roda it might be handled differently. It is generally a good
+default to opt into. 
+
 ```ruby
 class App < Roda
   plugin :sessions, secret: ENV["SESSION_SECRET"]
