@@ -154,8 +154,18 @@ is deployed: it works the same in Rails, Rack, and Roda:
   <div slot="placeholder">
     <p>Hi! Ask me anything about the 4.4BSD manual.</p>
   </div>
+
+  <img slot="tool.read-man.call-icon" src="icons/man-call-icon.svg">
   <span slot="tool.read-man.call">Reading man page {arguments.name}</span>
+
+  <img slot="tool.read-man.return-icon" src="icons/man-return-icon.svg">
   <span slot="tool.read-man.return">Read {count} man pages</span>
+
+  <!--
+    Catch all for any tool that does not have a
+    more specific rule. The call-icon and return-icon
+    fields can also be set here (similar to how it is
+    done just above) -->
   <span slot="tool.*.call">Running {name}…</span>
   <span slot="tool.*.return">Done</span>
 </agent>
