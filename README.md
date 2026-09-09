@@ -103,6 +103,13 @@ could be a component that integrates with the rest of your
 application. It also gives you the opportunity to extend
 the plugin's functionality by extending the Roda application.
 
+A scope has its own section later in the README.md but it is
+worth knowing that it is how you can implement callbacks
+that determine how an agent is found, saved, and created. The
+builtin session scope uses a session-backed store to link the
+agent's database record to an anonymous user session that exists
+in the user's browser.
+
 ```ruby
 class App < Roda
   plugin :sessions, secret: ENV["SESSION_SECRET"]
