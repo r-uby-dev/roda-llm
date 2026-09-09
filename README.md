@@ -45,6 +45,30 @@ gem install roda-llm
 
 ## Quick start
 
+##### Rakefile
+
+```ruby
+##
+# Add the following to your Rakefile for tasks
+# that manage assets, and ActiveRecord. The
+# ActiveRecord tasks are intended for non-Rails
+# settings.
+#
+# The ActiveRecord tasks expect config/database.yml
+# to exist and have database settings scoped per
+# environment (standard Rails style).
+require "roda/llm/rake/assets"
+require "roda/llm/rake/active_record"
+```
+
+The available tasks:
+
+    rake roda:llm:assets:install  # install the web component into the host application
+    rake roda:llm:db:create       # create the database
+    rake roda:llm:db:migrate      # run pending migrations (creating the database first if needed)
+    rake roda:llm:db:rollback     # rollback the most recent migration
+    rake roda:llm:db:status       # show migration status
+
 ##### agent.rb
 
 ```ruby
