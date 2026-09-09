@@ -133,7 +133,7 @@ run App
 ##### index.erb
 
 The `<agent>` web component can render a console that you can use
-to talk to agent. The console can be rendered-server side, so
+to talk to agent. The console can be rendered server-side, so
 you can prepopulate the content of the console with a placeholder
 or initial state without waiting for JavaScript to settle.
 
