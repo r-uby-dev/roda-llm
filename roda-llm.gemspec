@@ -25,7 +25,8 @@ Gem::Specification.new do |spec|
     "README.md",
     "LICENSE",
     "roda-llm.gemspec",
-    "lib/**/*.rb"
+    "lib/**/*.rb",
+    "public/**/*"
   ]
   spec.require_paths = ["lib"]
 
