@@ -134,7 +134,7 @@ run App
 
 The `<agent>` web component can render a console that you can use
 to talk to agent. The console can be rendered-server side, so
-you can prepopulate the content of the console with a greeting
+you can prepopulate the content of the console with a placeholder
 or initial state without waiting for JavaScript to settle.
 
 The console can also be configured through various different
@@ -151,7 +151,7 @@ is deployed: it works the same in Rails, Rack, and Roda:
 --->
 
 <agent name="theo">
-  <div slot="greeting">
+  <div slot="placeholder">
     <p>Hi! Ask me anything about the 4.4BSD manual.</p>
   </div>
   <span slot="tool.read-man.call">Reading man page {arguments.name}</span>
