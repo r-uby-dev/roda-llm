@@ -111,6 +111,44 @@ end
 run App
 ```
 
+##### index.erb
+
+The `agent!` method can render a console that you can use
+to talk to agent. The console is rendered-server side, so
+you can prepopulate the content of the console with a greeting.
+
+The console can also be configured through various different
+attributes, and slots. This method happens to require a Roda
+application though. It is scoped to an instance or subclass of
+the Roda class.
+
+```erb
+<% agent!(path: "/agents/theo") do %>
+  <div slot="greeting">
+    <p>Hi! Ask me anything about the 4.4BSD manual.</p>
+  </div>
+  <span slot="label.man.text">Reading man page {arguments.name}</span>
+  <span slot="label.man.done">Read {count} man pages</span>
+  <span slot="label.*.text">Running {name}…</span>
+  <span slot="label.*.done">Done</span>
+<% end %>
+```
+
+The equivalent can also be rendered server-side in standard HTML
+in a non-Roda setting:
+
+```html
+<agent path="/agents/theo">
+  <div slot="greeting">
+    <p>Hi! Ask me anything about the 4.4BSD manual.</p>
+  </div>
+  <span slot="label.man.text">Reading man page {arguments.name}</span>
+  <span slot="label.man.done">Read {count} man pages</span>
+  <span slot="label.*.text">Running {name}…</span>
+  <span slot="label.*.done">Done</span>
+</agent>
+```
+
 <details>
 <summary>Routes</summary>
 <br>

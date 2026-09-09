@@ -32,6 +32,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "roda", "~> 3.85"
   spec.add_dependency "roda-sse", "~> 0.3"
   spec.add_dependency "llm.rb", "~> 15.1"
+  spec.add_dependency "tilt"
+  spec.add_dependency "erubi"
 
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rake", "~> 13.0"
