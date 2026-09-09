@@ -59,15 +59,17 @@ gem install roda-llm
 # environment (standard Rails style).
 require "roda/llm/rake/assets"
 require "roda/llm/rake/active_record"
+require "roda/llm/rake/migrations"
 ```
 
 The available tasks:
 
-    rake roda:llm:assets:install  # install the web component into the host application
-    rake roda:llm:db:create       # create the database
-    rake roda:llm:db:migrate      # run pending migrations (creating the database first if needed)
-    rake roda:llm:db:rollback     # rollback the most recent migration
-    rake roda:llm:db:status       # show migration status
+    rake roda:llm:assets:install     # install the web component into the host application
+    rake roda:llm:db:create          # create the database
+    rake roda:llm:db:migrate         # run pending migrations (creating the database first if needed)
+    rake roda:llm:db:rollback        # rollback the most recent migration
+    rake roda:llm:db:status          # show migration status
+    rake roda:llm:g:migration[name]  # generate a migration (eg: rake roda:llm:g:migration[create_users])
 
 ##### agent.rb
 
