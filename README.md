@@ -12,9 +12,9 @@
 
 > [r.uby.dev](https://r.uby.dev/llm) project.
 
-Welcome to the canonical llm-roda repository.
+Welcome to the canonical roda-llm repository.
 
-llm-roda is a [Roda](https://roda.jeremyevans.net) plugin that
+roda-llm is a [Roda](https://roda.jeremyevans.net) plugin that
 provides a framework for deploying multiple llm.rb agents within
 your Roda, Rack or Rails application. The HTTP endpoints are
 provided via a Roda app that can be mounted within your own
@@ -112,7 +112,7 @@ agent's database record to a browser-based user session.
 The `route_csrf` plugin is optional but recommended to prevent
 cross forgery attacks. It is largely optional because outside
 Roda it might be handled differently. It is generally a good
-default to opt into. 
+default to opt into.
 
 ```ruby
 class App < Roda
