@@ -154,10 +154,10 @@ is deployed: it works the same in Rails, Rack, and Roda:
   <div slot="greeting">
     <p>Hi! Ask me anything about the 4.4BSD manual.</p>
   </div>
-  <span slot="label.read-man.text">Reading man page {arguments.name}</span>
-  <span slot="label.read-man.done">Read {count} man pages</span>
-  <span slot="label.*.text">Running {name}…</span>
-  <span slot="label.*.done">Done</span>
+  <span slot="tool.read-man.call">Reading man page {arguments.name}</span>
+  <span slot="tool.read-man.return">Read {count} man pages</span>
+  <span slot="tool.*.call">Running {name}…</span>
+  <span slot="tool.*.return">Done</span>
 </agent>
 ```
 
