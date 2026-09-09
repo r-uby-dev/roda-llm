@@ -120,7 +120,7 @@ or initial state without waiting for JavaScript to settle.
 
 The console can also be configured through various different
 attributes, and slots. This approach is agnostic to where it
-is deployed: it works the same in Rails, Rock, and Roda:
+is deployed: it works the same in Rails, Rack, and Roda:
 
 ```html
 <agent path="/agents/theo">
