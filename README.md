@@ -127,8 +127,8 @@ the Roda class.
   <div slot="greeting">
     <p>Hi! Ask me anything about the 4.4BSD manual.</p>
   </div>
-  <span slot="label.man.text">Reading man page {arguments.name}</span>
-  <span slot="label.man.done">Read {count} man pages</span>
+  <span slot="label.read-man.text">Reading man page {arguments.name}</span>
+  <span slot="label.read-man.done">Read {count} man pages</span>
   <span slot="label.*.text">Running {name}…</span>
   <span slot="label.*.done">Done</span>
 <% end %>
@@ -142,8 +142,8 @@ in a non-Roda setting:
   <div slot="greeting">
     <p>Hi! Ask me anything about the 4.4BSD manual.</p>
   </div>
-  <span slot="label.man.text">Reading man page {arguments.name}</span>
-  <span slot="label.man.done">Read {count} man pages</span>
+  <span slot="label.read-man.text">Reading man page {arguments.name}</span>
+  <span slot="label.read-man.done">Read {count} man pages</span>
   <span slot="label.*.text">Running {name}…</span>
   <span slot="label.*.done">Done</span>
 </agent>
