@@ -15,8 +15,8 @@
 Welcome to the canonical roda-llm repository.
 
 roda-llm is a [Roda](https://roda.jeremyevans.net) plugin that
-provides a framework for deploying multiple llm.rb agents within
-your Roda, Rack or Rails application. The HTTP endpoints are
+provides a framework for deploying multiple [llm.rb](https://github.com/r-uby-dev/llm#readme)
+agents within your Roda, Rack or Rails application. The HTTP endpoints are
 provided via a Roda app that can be mounted within your own
 Rack/Rails app. It makes it trivial to deploy multiple agents
 at scale while letting you focus on the code that makes your
