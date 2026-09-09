@@ -16,11 +16,16 @@ module LLM::Roda
     extend self
 
     ##
-    # The environment to run migrations under. Derived from
-    # the standard Rack/Sinatra/Rails env vars.
+    # The environment to run migrations under.
+    # Derived from ${RACK_ENV}, ${RAILS_ENV}
+    # or the default ("development").
     # @return [String]
     def env
-      ENV["APP_ENV"] || ENV["RACK_ENV"] || "development"
+      if env = ENV.fetch("RACK_ENV", ENV["RAILS_ENV"])
+        env.to_s.strip.empty? ? "development" : env
+      else
+        "development"
+      end
     end
 
     ##
