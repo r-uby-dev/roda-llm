@@ -68,7 +68,7 @@ end
 class App < Roda
   plugin :sessions, secret: ENV["SESSION_SECRET"]
   plugin :route_csrf, check_header: true
-  plugin :agent, agents: [{class: Beastie, scope: :session}]
+  plugin :agent, agents: [{class: Theo, scope: :session}]
 
   route do |r|
     r.agent!
@@ -150,7 +150,7 @@ class UserScope < LLM::Roda::Scope
 end
 
 class App < Roda
-  plugin :agent, agents: [{class: Beastie, scope: UserScope}]
+  plugin :agent, agents: [{class: Theo, scope: UserScope}]
 end
 run App
 ```
@@ -171,7 +171,7 @@ overriden.
 A custom stream can subclass it and override just the parts you need:
 
 ```ruby
-class Beastie::Stream < LLM::Roda::Stream
+class Theo::Stream < LLM::Roda::Stream
   def on_reasoning_content(content)
     ##
     # By default roda-llm does not implement this hook.
@@ -190,7 +190,7 @@ class Beastie::Stream < LLM::Roda::Stream
 end
 
 class App < Roda
-  plugin :agent, agents: [{class: Beastie, stream: Beastie::Stream}]
+  plugin :agent, agents: [{class: Theo, stream: Theo::Stream}]
 end
 run App
 ```
@@ -212,8 +212,8 @@ not call them directly.
 
 ```ruby
 route do |r|
-  post(true) { r.create_agent!("beastie") }
-  delete(true) { r.destroy_agent!("beastie") }
+  post(true) { r.create_agent!("Theo") }
+  delete(true) { r.destroy_agent!("Theo") }
 end
 ```
 
@@ -224,7 +224,7 @@ end
 <br>
 
 [`LLM::Roda.registry`](lib/roda/plugins/agent.rb) maps an agent's
-`LLM::Agent#name` (e.g. `"beastie"`) to its class, stream and scope,
+`LLM::Agent#name` (e.g. `"Theo"`) to its class, stream and scope,
 wrapped as `LLM::Object`s. It is populated by `plugin :agent`, and
 keyed by the agent name. An agent's name can be defined through the
 `agent.set name: "..."` method, otherwise it is inferred from the
