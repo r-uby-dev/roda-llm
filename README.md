@@ -97,6 +97,12 @@ end
 
 ##### config.ru
 
+roda-llm does not provide a Roda application by itself,
+so you would always create own your subclass of Roda that
+could be a component that integrates with the rest of your
+application. It also gives you the opportunity to extend
+the plugin's functionality by extending the Roda application.
+
 ```ruby
 class App < Roda
   plugin :sessions, secret: ENV["SESSION_SECRET"]
