@@ -135,20 +135,15 @@ run App
 The `<agent>` web component can render a console that you can use
 to talk to agent. The console can be rendered server-side, so
 you can prepopulate the content of the console with a placeholder
-or initial state without waiting for JavaScript to settle.
+or initial state before handing it over to the client side to
+render.
 
 The console can also be configured through various different
 attributes, and slots. This approach is agnostic to where it
 is deployed: it works the same in Rails, Rack, and Roda:
 
 ```html
-<!--
-    The name attribute resolves to agents/theo
-    and it is relative to the path of the current
-    tab. The path attribute can be set to an absolute
-    path when relative paths lead to 404s or other
-    unexpected behavior.
---->
+<script src="/roda-llm/web-component.js"></script>
 
 <agent name="theo">
   <div slot="placeholder">
@@ -161,11 +156,6 @@ is deployed: it works the same in Rails, Rack, and Roda:
   <img slot="tool.read-man.return-icon" src="icons/man-return-icon.svg">
   <span slot="tool.read-man.return">Read {count} man pages</span>
 
-  <!--
-    Catch all for any tool that does not have a
-    more specific rule. The call-icon and return-icon
-    fields can also be set here (similar to how it is
-    done just above) -->
   <span slot="tool.*.call">Running {name}…</span>
   <span slot="tool.*.return">Done</span>
 </agent>
