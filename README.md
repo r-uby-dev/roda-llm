@@ -14,11 +14,19 @@
 
 Welcome to the canonical llm-roda repository.
 
-llm-roda is a [Roda](https://roda.jeremyevans.net) plugin that deploys
-one or more [llm.rb](https://github.com/r-uby-dev/llm) agents as a fleet
-exposed under a single URL namespace. It provides the routes, request
-helpers, scopes and SSE streaming glue so an application can focus on
-writing agents instead of the machinery that wires them up.
+llm-roda is a [Roda](https://roda.jeremyevans.net) plugin that
+provides a framework for deploying multiple llm.rb agents within
+your Roda, Rack or Rails application. The HTTP endpoints are
+provided via a Roda app that can be mounted within your own
+Rack/Rails app. It makes it trivial to deploy multiple agents
+at scale while letting you focus on the code that makes your
+agent useful rather than the glue that makes it functional.
+
+The plugin also includes a web component that can be used
+to provide a web interface to an llm.rb agent. The web component
+is highly configurable - for example, you can define how tool calls
+render in the status bar. It is also written in vanilla JavaScript
+and uses technology that is builtin to the browser.
 
 ## Install
 
@@ -28,27 +36,15 @@ gem install roda-llm
 
 ## Quick start
 
-The `r.agent!` method can make multiple llm.rb agents available
-over HTTP endpoints. The routes it defines are defined inline
-within the host application. The fleet is available under
-`/agents/<agent-name>/` with `POST` (create), `GET` (stream via SSE)
-and `DELETE` (destroy) actions available.
-
-An agent is expected to be an ActiveRecord model that llm.rb supports
-out of the box. There can be multiple models, and each model can be a
-specialized agent with its own HTTP interface that can be used to
-interact with it. The `plugin :agent` method call receives a list
-of agents that it will setup endpoints for.
-
 ##### agent.rb
 
 ```ruby
 require "roda"
 require "roda-llm"
 
-class Beastie < ActiveRecord::Base
+class Theo < ActiveRecord::Base
   acts_as_agent do |agent|
-    agent.set name: "beastie",
+    agent.set name: "theo",
               description: "a chatbot for the 4.4bsd.dev website",
               instructions: proc { File.read("prompt.md") },
               tools: :tools
@@ -61,7 +57,7 @@ class Beastie < ActiveRecord::Base
   end
 
   def tools
-    [Beastie::Tools::ReadMan, Beastie::Tools::SearchMan]
+    [Theo::Tools::ReadMan, Theo::Tools::SearchMan]
   end
 end
 ```
