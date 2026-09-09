@@ -107,8 +107,8 @@ A scope has its own section later in the README.md but it is
 worth knowing that it is how you can implement callbacks
 that determine how an agent is found, saved, and created. The
 builtin session scope uses a session-backed store to link the
-agent's database record to an anonymous user session that exists
-in the user's browser.
+agent's database record to an anonymous browser-based user
+session.
 
 ```ruby
 class App < Roda
