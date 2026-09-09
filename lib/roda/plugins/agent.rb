@@ -9,7 +9,7 @@ module Roda::RodaPlugins
 
     extend self
 
-    DEFAULTS = {path: "agents", scope: :session}.freeze
+    DEFAULTS = {scope: :session}.freeze
     SCOPES = {session: Scope::Session}.freeze
 
     ##
@@ -32,7 +32,6 @@ module Roda::RodaPlugins
     # @return [void]
     def configure(_app, options)
       options = DEFAULTS.merge(options)
-      @path = options[:path]
       options[:agents].each do |agent|
         scope = SCOPES[agent[:scope]] || agent[:scope]
         key = agent[:class].agent.name
@@ -46,12 +45,6 @@ module Roda::RodaPlugins
       @registry ||= {}
     end
 
-    ##
-    # @return [String]
-    def path
-      @path
-    end
-
     module RequestMethods
       include Operations
 
@@ -62,8 +55,7 @@ module Roda::RodaPlugins
       #
       # @return [void]
       def agent!
-        path = LLM::Roda.path
-        on(path) do
+        on("agents") do
           on String do |name|
             post(true)   { [agent_scope!(name).new(self).check_csrf!, create_agent!(name)].last }
             sse          { |sse| update_agent!(name, params, sse) }

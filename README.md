@@ -140,7 +140,15 @@ attributes, and slots. This approach is agnostic to where it
 is deployed: it works the same in Rails, Rack, and Roda:
 
 ```html
-<agent path="/agents/theo">
+<!--
+    The name attribute resolves to agents/theo
+    and it is relative to the path of the current
+    tab. The path attribute can be set to an absolute
+    path when relative paths lead to 404s or other
+    unexpected behavior.
+--->
+
+<agent name="theo">
   <div slot="greeting">
     <p>Hi! Ask me anything about the 4.4BSD manual.</p>
   </div>
@@ -155,7 +163,12 @@ is deployed: it works the same in Rails, Rack, and Roda:
 <summary>Routes</summary>
 <br>
 
-The default routes:
+The default routes. The `/agents` namespace is always
+included but it is expected that a Roda application is
+being mounted within another Roda application or from
+`config/routes.rb` when Rails is the target. So this
+namespace can be relative to another path that you
+choose, such as `/users/:id/agents`.
 
 | Method | Path | Behaviour |
 |---|---|---|
