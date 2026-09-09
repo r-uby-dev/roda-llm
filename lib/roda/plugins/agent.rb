@@ -2,7 +2,6 @@
 
 module Roda::RodaPlugins
   module Agent
-    require "erubi/capture_block"
     require_relative "agent/operations"
     require_relative "agent/scope"
     require_relative "agent/scope/session"
@@ -25,9 +24,6 @@ module Roda::RodaPlugins
       app.plugin :json
       app.plugin :sse
       app.plugin :all_verbs
-      app.plugin :h
-      app.plugin :render, template_opts: {engine_class: Erubi::CaptureBlockEngine}
-      app.plugin :capture_erb
     end
 
     ##
@@ -74,27 +70,6 @@ module Roda::RodaPlugins
             delete(true) { [agent_scope!(name).new(self).check_csrf!, destroy_agent!(name)].last }
           end
         end
-      end
-    end
-
-    module InstanceMethods
-      ##
-      # Renders an <agent> web component in a template. The block
-      # provides the light-DOM children (label slots, greeting, ...)
-      # as plain markup. The attributes are escaped with `h`: the
-      # block content is authored markup and passes through as-is.
-      #
-      # = Example
-      #
-      #   <%= agent!(path: "/agents/foo") do %>
-      #     <span slot="label.man.text">Reading man pages</span>
-      #     <span slot="label.man.done">Read {count} man pages</span>
-      #   <% end %>
-      #
-      # @return [String]
-      def agent!(opts = OPTS, &block)
-        attrs = opts.map { |key, value| " #{h(key)}=\"#{h(value)}\"" }.join
-        "<agent#{attrs}>#{capture_erb(&block)}</agent>"
       end
     end
   end
