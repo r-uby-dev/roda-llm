@@ -324,15 +324,13 @@ determines how an agent is found, saved, and destroyed.
 
 ## See also
 
-The [r.uby.dev](https://r.uby.dev) and [4.4bsd.dev](https://4.4bsd.dev)
-websites are powered by roda-llm. Most of the code
-from roda-llm originated in those projects, and in
+The [r.uby.dev](https://r.uby.dev) website is powered by roda-llm.
+Most of the code from roda-llm originated there, and in
 an effort to avoid duplication and reproduce the same
 features in other applications roda-llm was born. The
-[r.uby.dev](https://r.uby.dev) website provides a chatbot
-that is connected to this very repository (and the llm.rb
-repository) so you can get authorative answers about both
-codebases.
+r.uby.dev website provides a chatbot that is connected to
+this very repository (and the llm.rb repository) so you
+can get authorative answers about both codebases.
 
 ## License
 
