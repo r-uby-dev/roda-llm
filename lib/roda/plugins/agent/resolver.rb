@@ -14,8 +14,8 @@ module Roda::RodaPlugins::Agent
   # session is reached through `roda`, because it belongs to the app
   # rather than the resolver.
   #
-  # @abstract Subclasses must implement {#find}, {#find!},
-  #   {#create} and {#destroy}.
+  # @abstract Subclasses must implement {#find}, {#create}
+  #   and {#destroy}.
   class Resolver
     ##
     # @return [Roda]
@@ -51,16 +51,6 @@ module Roda::RodaPlugins::Agent
     #  The agent class to look up.
     # @return [LLM::Agent, nil]
     def find(klass)
-      raise NotImplementedError
-    end
-
-    ##
-    # Find the agent for the current context, or raise if
-    # no agent is bound.
-    # @param [Class(LLM::Agent)] klass
-    #  The agent class to look up.
-    # @return [LLM::Agent]
-    def find!(klass)
       raise NotImplementedError
     end
 

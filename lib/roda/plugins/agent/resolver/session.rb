@@ -17,16 +17,6 @@ module Roda::RodaPlugins::Agent
     end
 
     ##
-    # Find the agent bound to this session, or raise if
-    # none is bound.
-    #
-    # @param [Class(LLM::Agent)] klass
-    # @return [LLM::Agent]
-    def find!(klass)
-      klass.find(roda.session[key!(klass)])
-    end
-
-    ##
     # Create an agent and bind it to this session.
     #
     # @param [Class(LLM::Agent)] klass

@@ -60,7 +60,7 @@ module Roda::RodaPlugins::Agent
     # Emits an error
     # @return [void]
     def error(message:)
-      emit("onToolError", error: message)
+      emit("onError", error: message)
     end
 
     private

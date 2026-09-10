@@ -53,9 +53,9 @@ RSpec.describe LLM::Roda::Stream do
   end
 
   describe "#error" do
-    it "emits an onToolError event" do
+    it "emits an onError event" do
       stream.error(message: "boom")
-      expect(io.string).to eq("event: onToolError\ndata: {\"error\":\"boom\"}\n\n")
+      expect(io.string).to eq("event: onError\ndata: {\"error\":\"boom\"}\n\n")
     end
   end
 

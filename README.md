@@ -193,7 +193,7 @@ users of the plugin control over how an agent is found, created
 and destroyed.
 
 [`LLM::Roda::Resolver`](lib/roda/plugins/agent/resolver.rb) is the abstract
-interface: subclasses implement `find`, `find!`, `create` and `destroy`. A
+interface: subclasses implement `find`, `create` and `destroy`. A
 resolver is built with the Roda application and the request being served, and
 both are exposed as readers (`roda` and `request`), along with the request's
 `params`. The session belongs to the app, so it is reached through `roda`. An
@@ -208,13 +208,6 @@ class UserResolver < LLM::Roda::Resolver
   # @return [LLM::Agent, nil]
   def find(klass)
     klass.find_by(user: current_user)
-  end
-
-  ##
-  # @raise [ActiveRecord::RecordNotFound]
-  # @return [LLM::Agent]
-  def find!(klass)
-    klass.find_by!(user: current_user)
   end
 
   ##

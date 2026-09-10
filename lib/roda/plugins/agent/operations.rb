@@ -2,6 +2,8 @@
 
 module Roda::RodaPlugins::Agent
   module Operations
+    NotFoundError = Class.new(RuntimeError)
+
     def create_agent!(name)
       klass = agent_class!(name)
       resolver = resolver!(name)
@@ -13,10 +15,10 @@ module Roda::RodaPlugins::Agent
       klass = agent_class!(name)
       resolver = resolver!(name)
       stream = agent_stream!(name).new(sse).tap(&:hello)
-      agent = resolver.find!(klass)
+      agent = resolver.find(klass) || raise(NotFoundError)
       res = agent.talk(params["q"], stream:)
       stream&.goodbye(res:)
-    rescue ActiveRecord::RecordNotFound
+    rescue NotFoundError
       stream&.error(message: "agent unavailable")
     rescue
       stream&.error(message: "internal server error")

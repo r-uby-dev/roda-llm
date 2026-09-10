@@ -31,8 +31,7 @@ RSpec.describe LLM::Roda do
 
   let(:resolver) do
     Class.new(LLM::Roda::Resolver) do
-      def find(_klass) = nil
-      def find!(klass) = klass.new(LLM.openai(key: "test"))
+      def find(klass) = klass.new(LLM.openai(key: "test"))
       def create(klass) = klass.new(LLM.openai(key: "test"))
       def destroy(_klass) = nil
     end
@@ -170,6 +169,26 @@ RSpec.describe LLM::Roda do
           body.call(stream)
           expect(stream).to have_received(:write).with(%(event: onGoodbye\ndata: {"answer":"other: hi"}\n\n))
         end
+      end
+    end
+
+    context "when the resolver has no agent" do
+      let(:resolver) do
+        Class.new(LLM::Roda::Resolver) do
+          def find(_klass) = nil
+          def create(klass) = klass.new(LLM.openai(key: "test"))
+        end
+      end
+
+      it "creates the agent" do
+        post "/agents/theo"
+        expect(json).to eq({"ok" => true, "id" => 1})
+      end
+
+      it "streams an error" do
+        get "/agents/theo", q: "hi"
+        body.call(stream)
+        expect(stream).to have_received(:write).with(%(event: onError\ndata: {"error":"agent unavailable"}\n\n))
       end
     end
 
