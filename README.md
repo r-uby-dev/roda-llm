@@ -31,10 +31,13 @@ asset can be installed into your application via a builtin rake
 task.
 
 An agent is implemented as an ActiveRecord model that you own.
-It would also be possible to support Sequel but for now the project
-is focused on using ActiveRecord for the persistence layer. For Rack
-and Roda applications rake tasks are provided that can support you
-in setting up ActiveRecord within a non-Rails setting. In a Rails
+It is also be possible support Sequel models and direct subclasses of
+[`LLM::Agent`](https://github.com/r-uby-dev/llm#readme) but the project
+optimizes for using ActiveRecord as the persistence layer. That doesn't
+mean you can't use alternatives, it might just require more glue code.
+
+For Rack and Roda applications rake tasks are provided that can support
+you in setting up ActiveRecord within a non-Rails setting. In a Rails
 setting, it is managed by the Rails framework.
 
 ## Install

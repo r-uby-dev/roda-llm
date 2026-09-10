@@ -3,3 +3,4 @@
 source "https://rubygems.org"
 
 gemspec
+gem "llm.rb", github: "r-uby-dev/llm"

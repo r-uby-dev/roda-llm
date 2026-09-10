@@ -34,8 +34,9 @@ module Roda::RodaPlugins
       options = DEFAULTS.merge(options)
       options[:agents].each do |agent|
         scope = SCOPES[agent[:scope]] || agent[:scope]
-        key = agent[:class].agent.name
-        registry[key] = LLM::Object.from agent.slice(:class, :stream).merge!(scope:)
+        klass = agent[:class]
+        name  = (klass < LLM::Agent ? klass : klass.agent).name
+        registry[name] = LLM::Object.from agent.slice(:class, :stream).merge!(scope:)
       end
     end
 
