@@ -22,14 +22,6 @@ Rack/Rails app. It makes it trivial to deploy multiple agents
 at scale while letting you focus on the code that makes your
 agent useful rather than the glue that makes it functional.
 
-The plugin  includes a HTML5 web component that can be used
-to provide a web interface to an llm.rb agent. The web component
-is highly configurable - for example, you can define how tool calls
-render in the status bar. It is also written in vanilla JavaScript
-and uses technology that is builtin to the browser. The javascript
-asset can be installed into your application via a builtin rake
-task.
-
 An agent is an ActiveRecord model that you own. It is powered by
 the llm.rb runtime and its `acts_as_agent` ActiveRecord extension.
 For Rack and Roda applications rake tasks are provided that can
@@ -37,6 +29,14 @@ support you in setting up ActiveRecord within a non-Rails setting.
 In a Rails setting, it is managed by the Rails framework. It is also
 possible support Sequel models and direct subclasses of [`LLM::Agent`](https://github.com/r-uby-dev/llm#readme)
 but the most common path is assumed to be ActiveRecord.
+
+The plugin  includes a HTML5 web component that can be used
+to provide a web interface to an llm.rb agent. The web component
+is highly configurable - for example, you can define how tool calls
+render in the status bar. It is also written in vanilla JavaScript
+and uses technology that is builtin to the browser. The javascript
+asset can be installed into your application via a builtin rake
+task.
 
 ## Install
 
