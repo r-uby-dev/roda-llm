@@ -30,15 +30,13 @@ and uses technology that is builtin to the browser. The javascript
 asset can be installed into your application via a builtin rake
 task.
 
-An agent is implemented as an ActiveRecord model that you own.
-It is also be possible support Sequel models and direct subclasses of
-[`LLM::Agent`](https://github.com/r-uby-dev/llm#readme) but the project
-optimizes for using ActiveRecord as the persistence layer. That doesn't
-mean you can't use alternatives, it might just require more glue code.
-
-For Rack and Roda applications rake tasks are provided that can support
-you in setting up ActiveRecord within a non-Rails setting. In a Rails
-setting, it is managed by the Rails framework.
+An agent is an ActiveRecord model that you own. It is powered by
+the llm.rb runtime and its `acts_as_agent` ActiveRecord extension.
+For Rack and Roda applications rake tasks are provided that can
+support you in setting up ActiveRecord within a non-Rails setting.
+In a Rails setting, it is managed by the Rails framework. It is also
+possible support Sequel models and direct subclasses of [`LLM::Agent`](https://github.com/r-uby-dev/llm#readme)
+but the most common path is assumed to be ActiveRecord.
 
 ## Install
 
