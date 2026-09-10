@@ -314,12 +314,13 @@ end
 <summary>Registry</summary>
 <br>
 
-[`LLM::Roda.registry`](lib/roda/plugins/agent.rb) maps an agent's
-`LLM::Agent#name` (e.g. `"Theo"`) to its class, stream and resolver,
-wrapped as `LLM::Object`s. It is populated by `plugin :agent`, and
-keyed by the agent name. An agent's name can be defined through the
-`agent.set name: "..."` method, otherwise it is inferred from the
-class name of the agent.
+The [`registry`](lib/roda/plugins/agent.rb) method is
+added to each Roda application that includes the
+Roda plugin. The registry maintains a list of agents
+that the Roda application is aware of and can serve
+requests for. Each agent is known by a class, and also
+by a resolver. The resolver receives the class, and
+determines how an agent is found, saved, and destroyed.
 
 </details>
 

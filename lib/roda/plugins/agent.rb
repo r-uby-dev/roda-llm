@@ -27,23 +27,27 @@ module Roda::RodaPlugins
     end
 
     ##
-    # @param [Roda] _app
+    # @param [Roda] app
     # @param [Hash] options
     # @return [void]
-    def configure(_app, options)
-      options = DEFAULTS.merge(options)
+    def configure(app, options)
+      options  = DEFAULTS.merge(options)
+      registry = {}
       options[:agents].each do |agent|
         resolver = RESOLVERS[agent[:resolver]] || agent[:resolver]
         klass = agent[:class]
         name  = (klass < LLM::Agent ? klass : klass.agent).name
         registry[name] = LLM::Object.from agent.slice(:class, :stream).merge!(resolver:)
       end
+      app.opts["roda.llm.registry"] = registry
     end
 
-    ##
-    # @return [Hash]
-    def registry
-      @registry ||= {}
+    module ClassMethods
+      ##
+      # @return [Hash{String => LLM::Object}]
+      def registry
+        opts["roda.llm.registry"] || {}
+      end
     end
 
     module RequestMethods

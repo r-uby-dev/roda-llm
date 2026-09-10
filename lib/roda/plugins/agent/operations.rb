@@ -38,7 +38,7 @@ module Roda::RodaPlugins::Agent
     private
 
     def agent_attributes!(name)
-      LLM::Object.from(LLM::Roda.registry[name])
+      LLM::Object.from(roda_class.registry[name])
     end
 
     def agent_class!(name)
