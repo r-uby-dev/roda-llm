@@ -4,18 +4,14 @@ module Roda::RodaPlugins::Agent
   module Operations
     def create_agent!(name)
       klass = agent_class!(name)
-      ##
-      # 'self' is resolved to an instance of Roda.
-      resolver = agent_resolver!(name).new(self)
+      resolver = resolver!(name)
       agent = resolver.find(klass) || resolver.create(klass)
       {ok: true, id: agent.id}
     end
 
     def update_agent!(name, params, sse)
       klass = agent_class!(name)
-      ##
-      # 'self' is resolved to an instance of Roda.
-      resolver = agent_resolver!(name).new(self)
+      resolver = resolver!(name)
       stream = agent_stream!(name).new(sse).tap(&:hello)
       agent = resolver.find!(klass)
       res = agent.talk(params["q"], stream:)
@@ -28,14 +24,21 @@ module Roda::RodaPlugins::Agent
 
     def destroy_agent!(name)
       klass = agent_class!(name)
-      ##
-      # 'self' is resolved to an instance of Roda.
-      resolver = agent_resolver!(name).new(self)
+      resolver = resolver!(name)
       resolver.destroy(klass)
       {ok: true}
     end
 
     private
+
+    ##
+    # Build a resolver for the named agent, bound to the Roda
+    # application it belongs to and the request being served.
+    # @param [String] name
+    # @return [Roda::RodaPlugins::Agent::Resolver]
+    def resolver!(name)
+      agent_resolver!(name).new(scope, self)
+    end
 
     def agent_attributes!(name)
       LLM::Object.from(roda_class.registry[name])

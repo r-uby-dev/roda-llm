@@ -192,9 +192,11 @@ and it can work for guest users as well. This feature gives
 users of the plugin control over how an agent is found, created
 and destroyed.
 
-[`LLM::Roda::Resolver`](lib/roda/plugins/agent/resolver.rb) is the abstract interface:
-subclasses implement `find`, `find!`, `create` and `destroy`, and can
-reach the app through the private `session` and `request` helpers. An
+[`LLM::Roda::Resolver`](lib/roda/plugins/agent/resolver.rb) is the abstract
+interface: subclasses implement `find`, `find!`, `create` and `destroy`. A
+resolver is built with the Roda application and the request being served, and
+both are exposed as readers (`roda` and `request`), along with the request's
+`params`. The session belongs to the app, so it is reached through `roda`. An
 example of a custom resolver binding an agent to the authenticated user
 instead of the user's session:
 
@@ -234,7 +236,7 @@ class UserResolver < LLM::Roda::Resolver
   #
   # @return [User]
   def current_user
-    @app.session[:user_id] && User.find(@app.session[:user_id])
+    roda.session[:user_id] && User.find(roda.session[:user_id])
   end
 end
 

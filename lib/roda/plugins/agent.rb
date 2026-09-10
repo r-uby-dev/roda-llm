@@ -58,9 +58,9 @@ module Roda::RodaPlugins
       def agent!
         on("agents") do
           on String do |name|
-            post(true)   { [agent_resolver!(name).new(self).check_csrf!, create_agent!(name)].last }
+            post(true)   { [resolver!(name).check_csrf!, create_agent!(name)].last }
             sse          { |sse| update_agent!(name, params, sse) }
-            delete(true) { [agent_resolver!(name).new(self).check_csrf!, destroy_agent!(name)].last }
+            delete(true) { [resolver!(name).check_csrf!, destroy_agent!(name)].last }
           end
         end
       end

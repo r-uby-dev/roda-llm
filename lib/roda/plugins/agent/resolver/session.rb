@@ -13,7 +13,7 @@ module Roda::RodaPlugins::Agent
     # @param [Class(LLM::Agent)] klass
     # @return [LLM::Agent, nil]
     def find(klass)
-      klass.find_by(id: session[key!(klass)])
+      klass.find_by(id: roda.session[key!(klass)])
     end
 
     ##
@@ -23,7 +23,7 @@ module Roda::RodaPlugins::Agent
     # @param [Class(LLM::Agent)] klass
     # @return [LLM::Agent]
     def find!(klass)
-      klass.find(session[key!(klass)])
+      klass.find(roda.session[key!(klass)])
     end
 
     ##
@@ -32,7 +32,7 @@ module Roda::RodaPlugins::Agent
     # @param [Class(LLM::Agent)] klass
     # @return [LLM::Agent]
     def create(klass)
-      klass.create!.tap { session[key!(klass)] = it.id }
+      klass.create!.tap { roda.session[key!(klass)] = it.id }
     end
 
     ##
@@ -42,8 +42,8 @@ module Roda::RodaPlugins::Agent
     # @param [Class(LLM::Agent)] klass
     # @return [void]
     def destroy(klass)
-      klass.find_by(id: session[key!(klass)])&.destroy
-      session.delete(key!(klass))
+      klass.find_by(id: roda.session[key!(klass)])&.destroy
+      roda.session.delete(key!(klass))
     end
 
     private
