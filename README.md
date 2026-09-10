@@ -141,7 +141,10 @@ render.
 
 The console can also be configured through various different
 attributes, and slots. This approach is agnostic to where it
-is deployed: it works the same in Rails, Rack, and Roda:
+is deployed: it works the same in Rails, Rack, and Roda. The
+console's own markup and styles are owned by the plugin and
+rendered into a shadow root, so an application only renders the
+element, and slots in whatever it wants to override:
 
 ```html
 <script src="/roda-llm/web-component.js"></script>
