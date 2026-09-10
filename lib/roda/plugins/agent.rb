@@ -3,14 +3,14 @@
 module Roda::RodaPlugins
   module Agent
     require_relative "agent/operations"
-    require_relative "agent/scope"
-    require_relative "agent/scope/session"
+    require_relative "agent/resolver"
+    require_relative "agent/resolver/session"
     require_relative "agent/stream"
 
     extend self
 
-    DEFAULTS = {scope: :session}.freeze
-    SCOPES = {session: Scope::Session}.freeze
+    DEFAULTS = {resolver: :session}.freeze
+    RESOLVERS = {session: Resolver::Session}.freeze
 
     ##
     # Adds the Roda plugins the agent routes need. The host app
@@ -33,10 +33,10 @@ module Roda::RodaPlugins
     def configure(_app, options)
       options = DEFAULTS.merge(options)
       options[:agents].each do |agent|
-        scope = SCOPES[agent[:scope]] || agent[:scope]
+        resolver = RESOLVERS[agent[:resolver]] || agent[:resolver]
         klass = agent[:class]
         name  = (klass < LLM::Agent ? klass : klass.agent).name
-        registry[name] = LLM::Object.from agent.slice(:class, :stream).merge!(scope:)
+        registry[name] = LLM::Object.from agent.slice(:class, :stream).merge!(resolver:)
       end
     end
 
@@ -58,9 +58,9 @@ module Roda::RodaPlugins
       def agent!
         on("agents") do
           on String do |name|
-            post(true)   { [agent_scope!(name).new(self).check_csrf!, create_agent!(name)].last }
+            post(true)   { [agent_resolver!(name).new(self).check_csrf!, create_agent!(name)].last }
             sse          { |sse| update_agent!(name, params, sse) }
-            delete(true) { [agent_scope!(name).new(self).check_csrf!, destroy_agent!(name)].last }
+            delete(true) { [agent_resolver!(name).new(self).check_csrf!, destroy_agent!(name)].last }
           end
         end
       end

@@ -5,19 +5,19 @@ module Roda::RodaPlugins::Agent
     def create_agent!(name)
       klass = agent_class!(name)
       ##
-      # 'self.scope' is resolved to an instance of Roda.
-      scope = agent_scope!(name).new(self.scope)
-      agent = scope.find(klass) || scope.create(klass)
+      # 'self' is resolved to an instance of Roda.
+      resolver = agent_resolver!(name).new(self)
+      agent = resolver.find(klass) || resolver.create(klass)
       {ok: true, id: agent.id}
     end
 
     def update_agent!(name, params, sse)
       klass = agent_class!(name)
       ##
-      # 'self.scope' is resolved to an instance of Roda.
-      scope = agent_scope!(name).new(self.scope)
+      # 'self' is resolved to an instance of Roda.
+      resolver = agent_resolver!(name).new(self)
       stream = agent_stream!(name).new(sse).tap(&:hello)
-      agent = scope.find!(klass)
+      agent = resolver.find!(klass)
       res = agent.talk(params["q"], stream:)
       stream&.goodbye(res:)
     rescue ActiveRecord::RecordNotFound
@@ -29,9 +29,9 @@ module Roda::RodaPlugins::Agent
     def destroy_agent!(name)
       klass = agent_class!(name)
       ##
-      # 'self.scope' is resolved to an instance of Roda.
-      scope = agent_scope!(name).new(self.scope)
-      scope.destroy(klass)
+      # 'self' is resolved to an instance of Roda.
+      resolver = agent_resolver!(name).new(self)
+      resolver.destroy(klass)
       {ok: true}
     end
 
@@ -45,8 +45,8 @@ module Roda::RodaPlugins::Agent
       agent_attributes!(name)[:class]
     end
 
-    def agent_scope!(name)
-      agent_attributes!(name).scope
+    def agent_resolver!(name)
+      agent_attributes!(name).resolver
     end
 
     def agent_stream!(name)

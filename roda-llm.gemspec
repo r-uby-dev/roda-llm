@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.description = <<~DESCRIPTION
     roda-llm is a Roda plugin that deploys one or more llm.rb agents as a
     fleet exposed under a single URL namespace. It provides the routes,
-    request helpers, scopes and SSE streaming glue so applications can
+    request helpers, resolvers and SSE streaming glue so applications can
     focus on writing agents instead of the machinery that wires them up.
   DESCRIPTION
 

@@ -2,11 +2,11 @@
 
 module Roda::RodaPlugins::Agent
   ##
-  # The {Roda::RodaPlugins::Agent::Scope::Session Session} scope
+  # The {Roda::RodaPlugins::Agent::Resolver::Session Session} resolver
   # stores one agent per visitor session. The agent's id lives
   # under a per-class key in the Roda session, so different
   # agent classes stay separate within the same session.
-  class Scope::Session < Scope
+  class Resolver::Session < Resolver
     ##
     # Find the agent bound to this session, or nil.
     #

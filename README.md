@@ -108,10 +108,10 @@ could be a component that integrates with the rest of your
 application. It also gives you the opportunity to extend
 the plugin's functionality by extending the Roda application.
 
-A scope has its own section later in the README.md but it is
+A resolver has its own section later in the README.md but it is
 worth knowing that it is how you can implement callbacks
 that determine how an agent is found, saved, and created. The
-builtin session scope uses a session-backed store to link the
+builtin session resolver uses a session-backed store to link the
 agent's database record to a browser-based user session.
 
 The `route_csrf` plugin is optional but recommended to prevent
@@ -123,7 +123,7 @@ default to opt into.
 class App < Roda
   plugin :sessions, secret: ENV["SESSION_SECRET"]
   plugin :route_csrf, check_header: true
-  plugin :agent, agents: [{class: Theo, scope: :session}]
+  plugin :agent, agents: [{class: Theo, resolver: LLM::Roda::Resolver::Session}]
 
   route do |r|
     r.agent!
@@ -184,26 +184,26 @@ choose, such as `/users/:id/agents`.
 </details>
 
 <details>
-<summary>Scopes</summary>
+<summary>Resolvers</summary>
 <br>
 
-A scope lets you implement different backends for the
+A resolver lets you implement different backends for the
 discovery, creation and destruction of agents. The default
-scope implements a backend that is tied to a user's session
+resolver implements a backend that is tied to a user's session
 and it can work for guest users as well. This feature gives
 users of the plugin control over how an agent is found, created
 and destroyed.
 
-[`LLM::Roda::Scope`](lib/roda/plugins/agent/scope.rb) is the abstract interface:
+[`LLM::Roda::Resolver`](lib/roda/plugins/agent/resolver.rb) is the abstract interface:
 subclasses implement `find`, `find!`, `create` and `destroy`, and can
 reach the app through the private `session` and `request` helpers. An
-example of a custom scope binding an agent to the authenticated user
+example of a custom resolver binding an agent to the authenticated user
 instead of the user's session:
 
 ```ruby
 ##
-# Custom scope: one agent per signed-in user.
-class UserScope < LLM::Roda::Scope
+# Custom resolver: one agent per signed-in user.
+class UserResolver < LLM::Roda::Resolver
   ##
   # @return [LLM::Agent, nil]
   def find(klass)
@@ -241,7 +241,7 @@ class UserScope < LLM::Roda::Scope
 end
 
 class App < Roda
-  plugin :agent, agents: [{class: Theo, scope: UserScope}]
+  plugin :agent, agents: [{class: Theo, resolver: UserResolver}]
 end
 run App
 ```
@@ -296,8 +296,8 @@ The [Operations](lib/roda/plugins/agent/operations.rb) module is a
 RequestMethods mixin. The plugin's `RequestMethods` includes it, so the
 three lifecycle verbs (`create_agent!`, `update_agent!` and `destroy_agent!`)
 run on the request and are available inside the route block. Each resolves the
-registered agent class and its scope via the `registry`, builds a scope
-for the current Roda request (`self.scope`), and performs the action.
+registered agent class and its resolver via the `registry`, builds a resolver
+for the current Roda request, and performs the action.
 The routes declared by `r.agent!` call these verbs and usually you would
 not call them directly.
 
@@ -315,7 +315,7 @@ end
 <br>
 
 [`LLM::Roda.registry`](lib/roda/plugins/agent.rb) maps an agent's
-`LLM::Agent#name` (e.g. `"Theo"`) to its class, stream and scope,
+`LLM::Agent#name` (e.g. `"Theo"`) to its class, stream and resolver,
 wrapped as `LLM::Object`s. It is populated by `plugin :agent`, and
 keyed by the agent name. An agent's name can be defined through the
 `agent.set name: "..."` method, otherwise it is inferred from the

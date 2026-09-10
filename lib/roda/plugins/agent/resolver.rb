@@ -2,22 +2,23 @@
 
 module Roda::RodaPlugins::Agent
   ##
-  # The {Roda::RodaPlugins::Agent::Scope Scope} class defines
-  # the interface that a scope must provide to store and
-  # retrieve agents. A scope is responsible for answering
-  # "where does an agent live?" for a given agent class:
-  # in a session, shared globally, or somewhere custom.
+  # The {Roda::RodaPlugins::Agent::Resolver Resolver} class defines
+  # the interface that a resolver must provide to store, retrieve
+  # and create agents. A resolver is responsible for answering
+  # "how do I turn this agent class into a talkable agent?" for a
+  # given agent class: from a session, shared globally, or somewhere
+  # custom.
   #
-  # A scope is constructed with the Roda app, so subclasses
+  # A resolver is constructed with the Roda app, so subclasses
   # can reach anything on the app (e.g. the session).
   #
   # @abstract Subclasses must implement {#find}, {#find!},
   #   {#create} and {#destroy}.
-  class Scope
+  class Resolver
     ##
     # @param [Roda] app
-    #  The app instance that owns this scope.
-    # @return [Scope]
+    #  The app instance that owns this resolver.
+    # @return [Resolver]
     def initialize(app)
       @app = app
     end
