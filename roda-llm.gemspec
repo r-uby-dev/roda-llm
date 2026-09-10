@@ -6,13 +6,11 @@ Gem::Specification.new do |spec|
   spec.authors = ["Robert Gleeson"]
   spec.email = ["robert@r.uby.dev"]
 
-  spec.summary = "A Roda plugin for managing llm.rb agents"
   spec.description = <<~DESCRIPTION
-    roda-llm is a Roda plugin that deploys one or more llm.rb agents as a
-    fleet exposed under a single URL namespace. It provides the routes,
-    request helpers, resolvers and SSE streaming glue so applications can
-    focus on writing agents instead of the machinery that wires them up.
+  roda-llm is a Roda plugin that provides a framework for deploying
+  multiple llm.rb agents within your Roda, Rack or Rails application.
   DESCRIPTION
+  spec.summary = spec.description
 
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.3.0"
