@@ -22,7 +22,7 @@ Rack/Rails app. It makes it trivial to deploy multiple agents
 at scale while letting you focus on the code that makes your
 agent useful rather than the glue that makes it functional.
 
-The plugin also includes a web component that can be used
+The plugin  includes a HTML5 web component that can be used
 to provide a web interface to an llm.rb agent. The web component
 is highly configurable - for example, you can define how tool calls
 render in the status bar. It is also written in vanilla JavaScript
