@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "llm.rb", "~> 15.2"
 
   spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "rack-test", "~> 2.0"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "standard", "~> 1.50"
   spec.add_development_dependency "activerecord", "~> 8.1"

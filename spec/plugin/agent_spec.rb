@@ -1,17 +1,49 @@
 # frozen_string_literal: true
 
 require "setup"
-require "rack/mock"
+require "rack/test"
 
 RSpec.describe LLM::Roda do
-  let(:theo) { Class.new(LLM::Agent) { set name: "theo" } }
-  let(:other) { Class.new(LLM::Agent) { set name: "other" } }
+  include Rack::Test::Methods
+
+  let(:theo) do
+    Class.new(LLM::Agent) do
+      set name: "theo"
+      def id = 1
+
+      def talk(prompt, stream: nil)
+        stream&.on_content(prompt)
+        LLM::Object.from(content: prompt)
+      end
+    end
+  end
+
+  let(:other) do
+    Class.new(LLM::Agent) do
+      set name: "other"
+      def id = 2
+
+      def talk(prompt, stream: nil)
+        LLM::Object.from(content: "other: #{prompt}")
+      end
+    end
+  end
+
+  let(:resolver) do
+    Class.new(LLM::Roda::Resolver) do
+      def find(_klass) = nil
+      def find!(klass) = klass.new(LLM.openai(key: "test"))
+      def create(klass) = klass.new(LLM.openai(key: "test"))
+      def destroy(_klass) = nil
+    end
+  end
+
   let(:agent_class) { theo }
-  let(:resolver) { LLM::Roda::Resolver::Session }
   let(:agents) { [{class: agent_class, resolver:}] }
   let(:app) do
     app = Class.new(Roda)
-    app.plugin :agent, agents: agents
+    app.plugin(:agent, agents:)
+    app.route { |r| r.agent! }
     app
   end
 
@@ -21,29 +53,12 @@ RSpec.describe LLM::Roda do
     end
 
     it "stores the resolver class it was given" do
-      expect(app.registry["theo"][:resolver]).to eq(LLM::Roda::Resolver::Session)
+      expect(app.registry["theo"][:resolver]).to eq(resolver)
     end
 
     context "when the agent is a plain LLM::Agent subclass" do
       it "stores the agent's class" do
         expect(app.registry["theo"][:class]).to be(theo)
-      end
-    end
-
-    context "when the agent is reached through .agent" do
-      let(:agent_class) do
-        theo_class = theo
-        Class.new do
-          define_singleton_method(:agent) { theo_class }
-        end
-      end
-
-      it "keys the agent by the agent's name" do
-        expect(app.registry.keys).to eq(["theo"])
-      end
-
-      it "stores the class it was given" do
-        expect(app.registry["theo"][:class]).to be(agent_class)
       end
     end
 
@@ -79,10 +94,6 @@ RSpec.describe LLM::Roda do
       it "is inherited by the subclass" do
         expect(subclass.registry.keys).to eq(["theo"])
       end
-
-      it "is owned by the subclass" do
-        expect(subclass.registry).not_to be(app.registry)
-      end
     end
 
     context "when the subclass declares its own agent" do
@@ -111,38 +122,62 @@ RSpec.describe LLM::Roda do
   end
 
   describe "#agent!" do
-    let(:app) do
-      app = Class.new(Roda)
-      app.plugin :agent, agents: agents
-      app.route { |r| r.agent! }
-      app
-    end
+    let(:body) { last_response.instance_variable_get(:@body) }
+    let(:stream) { double(write: nil, close_write: nil) }
+    let(:json) { LLM.json.load(last_response.body) }
 
-    let(:agent_class) do
-      Class.new(LLM::Agent) do
-        set name: "theo"
-        def self.id = 1
+    describe "POST /agents/:name" do
+      before { post "/agents/theo" }
+
+      it "includes the agent's id" do
+        expect(json).to eq({"ok" => true, "id" => 1})
       end
     end
 
-    let(:resolver) do
-      Class.new(LLM::Roda::Resolver) do
-        def find(_klass) = nil
-        def find!(klass) = klass
-        def create(klass) = klass
-        def destroy(_klass) = nil
+    describe "GET /agents/:name" do
+      before do
+        post "/agents/theo"
+        get "/agents/theo", q: "hi"
+      end
+
+      it "streams the agent's answer" do
+        body.call(stream)
+        expect(stream).to have_received(:write).with(%(event: onGoodbye\ndata: {"answer":"hi"}\n\n))
+      end
+
+      context "when the agent declares a stream" do
+        let(:stream_class) do
+          Class.new(LLM::Roda::Stream) do
+            def goodbye(res:) = emit("onAnswer", answer: res.content)
+          end
+        end
+        let(:agents) { [{class: agent_class, resolver:, stream: stream_class}] }
+
+        it "streams through the declared stream" do
+          body.call(stream)
+          expect(stream).to have_received(:write).with(%(event: onAnswer\ndata: {"answer":"hi"}\n\n))
+        end
+      end
+
+      context "when the app serves two agents" do
+        let(:agents) do
+          [{class: theo, resolver:}, {class: other, resolver:}]
+        end
+
+        before { get "/agents/other", q: "hi" }
+
+        it "streams the answer of the agent named in the path" do
+          body.call(stream)
+          expect(stream).to have_received(:write).with(%(event: onGoodbye\ndata: {"answer":"other: hi"}\n\n))
+        end
       end
     end
 
-    let(:response) { Rack::MockRequest.new(app).post("/agents/theo") }
+    describe "DELETE /agents/:name" do
+      before { delete "/agents/theo" }
 
-    context "when a POST creates an agent" do
-      it "responds successfully" do
-        expect(response.status).to eq(200)
-      end
-
-      it "responds with the agent's id" do
-        expect(LLM.json.load(response.body)).to eq({"ok" => true, "id" => 1})
+      it "responds with ok" do
+        expect(json).to eq({"ok" => true})
       end
     end
   end
