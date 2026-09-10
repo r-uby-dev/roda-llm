@@ -7,8 +7,8 @@ RSpec.describe LLM::Roda do
   let(:theo) { Class.new(LLM::Agent) { set name: "theo" } }
   let(:other) { Class.new(LLM::Agent) { set name: "other" } }
   let(:agent_class) { theo }
-  let(:resolver) { :session }
-  let(:agents) { [{class: agent_class, resolver: resolver}] }
+  let(:resolver) { LLM::Roda::Resolver::Session }
+  let(:agents) { [{class: agent_class, resolver:}] }
   let(:app) do
     app = Class.new(Roda)
     app.plugin :agent, agents: agents
@@ -20,7 +20,7 @@ RSpec.describe LLM::Roda do
       expect(app.registry.keys).to eq(["theo"])
     end
 
-    it "maps a resolver given by name" do
+    it "stores the resolver class it was given" do
       expect(app.registry["theo"][:resolver]).to eq(LLM::Roda::Resolver::Session)
     end
 
@@ -47,14 +47,6 @@ RSpec.describe LLM::Roda do
       end
     end
 
-    context "when the resolver is given as a class" do
-      let(:resolver) { LLM::Roda::Resolver::Session }
-
-      it "stores the resolver" do
-        expect(app.registry["theo"][:resolver]).to eq(LLM::Roda::Resolver::Session)
-      end
-    end
-
     context "when no agent is declared" do
       let(:agents) { [] }
 
@@ -66,7 +58,7 @@ RSpec.describe LLM::Roda do
     context "when another app is configured" do
       let(:other_app) do
         app = Class.new(Roda)
-        app.plugin :agent, agents: [{class: other, resolver: :session}]
+        app.plugin :agent, agents: [{class: other, resolver:}]
         app
       end
 
@@ -96,7 +88,7 @@ RSpec.describe LLM::Roda do
     context "when the subclass declares its own agent" do
       let(:subclass) do
         subclass = Class.new(app)
-        subclass.plugin :agent, agents: [{class: other, resolver: :session}]
+        subclass.plugin :agent, agents: [{class: other, resolver:}]
         subclass
       end
 

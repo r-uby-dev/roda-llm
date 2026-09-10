@@ -6,11 +6,8 @@ module Roda::RodaPlugins
     require_relative "agent/resolver"
     require_relative "agent/resolver/session"
     require_relative "agent/stream"
-
     extend self
 
-    DEFAULTS = {resolver: :session}.freeze
-    RESOLVERS = {session: Resolver::Session}.freeze
 
     ##
     # Adds the Roda plugins the agent routes need. The host app
@@ -31,11 +28,10 @@ module Roda::RodaPlugins
     # @param [Hash] options
     # @return [void]
     def configure(app, options)
-      options  = DEFAULTS.merge(options)
+      options  = {}.merge!(options)
       registry = {}
       options[:agents].each do |agent|
-        resolver = RESOLVERS[agent[:resolver]] || agent[:resolver]
-        klass = agent[:class]
+        resolver, klass = agent[:resolver], agent[:class]
         name  = (klass < LLM::Agent ? klass : klass.agent).name
         registry[name] = LLM::Object.from agent.slice(:class, :stream).merge!(resolver:)
       end
