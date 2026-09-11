@@ -180,11 +180,14 @@ the transcript as they happen, so they are visible while they run and
 after they return, and they scroll with the answer instead of taking a
 panel of their own. `prompt` names the composer's prompt
 (`$` by default) and `placeholder` its placeholder text; the
-`reset-icon` slot replaces the reset button's icon. To move it further
-in the direction of a given design, either set the tokens, or style it
+`reset-icon` slot replaces the reset button's icon. Expanding mirrors
+onto the host as the `expanded` attribute, so a page can dress the
+expanded console or take the viewport with it. To move it further in
+the direction of a given design, either set the tokens, or style it
 from the outside with `::part()`.
 
 Every part is available: `console`, `body`, `answer`, `trace`,
+`trace-details`, `trace-summary`, `trace-label`, `trace-list`,
 `placeholder`, `status`, `form`, `prompt`, `input`, `expand` and
 `reset`:
 
