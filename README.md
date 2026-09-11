@@ -149,10 +149,14 @@ element, and slots in whatever it wants to override:
 ```html
 <script src="/roda-llm/web-component.js"></script>
 
-<agent-console agent="theo">
+<agent-console agent="theo" prompt="&gt;">
   <div slot="placeholder">
     <p>Ask me anything about the 4.4BSD manual.</p>
   </div>
+
+  <svg slot="reset-icon" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+    <path d="…"/>
+  </svg>
 
   <img slot="tool.read-man.call-icon" src="icons/man-call-icon.svg">
   <span slot="tool.read-man.call">Reading man page {arguments.name}</span>
@@ -171,9 +175,11 @@ family are inherited, the sizes are relative, and the border, surface
 and muted tones are neutrals that follow the page's own
 `color-scheme`. Its own furniture - the composer, the actions and the
 status line - is set in a mono stack, the way a console reads, while
-answers stay in the page's font. To move it further in the direction
-of a given design, either set the tokens, or style it from the
-outside with `::part()`.
+answers stay in the page's font. `prompt` names the composer's prompt
+(`$` by default) and `placeholder` its placeholder text; the
+`reset-icon` slot replaces the reset button's icon. To move it further
+in the direction of a given design, either set the tokens, or style it
+from the outside with `::part()`.
 
 Every part is available: `console`, `main`, `body`, `answer`,
 `placeholder`, `status`, `actions`, `form`, `input`, `expand` and
