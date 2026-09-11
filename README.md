@@ -173,7 +173,11 @@ and muted tones are neutrals that follow the page's own
 status line - is set in a mono stack, the way a console reads, while
 answers stay in the page's font. To move it further in the direction
 of a given design, either set the tokens, or style it from the
-outside with `::part()`:
+outside with `::part()`.
+
+Every part is available: `console`, `main`, `body`, `answer`,
+`placeholder`, `status`, `actions`, `form`, `input`, `expand` and
+`reset`:
 
 ```html
 <style>
@@ -202,10 +206,6 @@ outside with `::part()`:
   agent-console::part(input) { border-radius: 999px; }
 </style>
 ```
-
-Every part is available: `console`, `main`, `body`, `answer`,
-`placeholder`, `status`, `actions`, `form`, `input`, `expand` and
-`reset`.
 
 <details>
 <summary>Routes</summary>
