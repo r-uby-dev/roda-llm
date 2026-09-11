@@ -179,7 +179,7 @@ choose, such as `/users/:id/agents`.
 | Method | Path | Behaviour |
 |---|---|---|
 | `POST`   | `/agents/<name>`       | create an agent of that class |
-| `GET`    | `/agents/<name>?q=...`  | talk to the agent (SSE stream) |
+| `GET`    | `/agents/<name>?q=...`  | (stream) talk to the agent - creates one if none is bound |
 | `DELETE` | `/agents/<name>`       | destroy the bound agent |
 
 </details>

@@ -185,10 +185,25 @@ RSpec.describe LLM::Roda do
         expect(json).to eq({"ok" => true, "id" => 1})
       end
 
+      it "talks to an agent that has not been created yet" do
+        get "/agents/theo", q: "hi"
+        body.call(stream)
+        expect(stream).to have_received(:write).with(%(event: onGoodbye\ndata: {"answer":"hi"}\n\n))
+      end
+    end
+
+    context "when the agent raises" do
+      let(:agent_class) do
+        Class.new(LLM::Agent) do
+          set name: "theo"
+          def talk(*) = raise("boom")
+        end
+      end
+
       it "streams an error" do
         get "/agents/theo", q: "hi"
         body.call(stream)
-        expect(stream).to have_received(:write).with(%(event: onError\ndata: {"error":"agent unavailable"}\n\n))
+        expect(stream).to have_received(:write).with(%(event: onError\ndata: {"error":"internal server error"}\n\n))
       end
     end
 
