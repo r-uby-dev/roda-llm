@@ -96,6 +96,9 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
 
   .ac-console {
     align-items: stretch;
+    /* The console's horizontal padding, named so the bar can bleed out
+       through it and meet the borders. */
+    --ac-pad-x: 1.15em;
     background: var(--ac-background);
     border: 1px solid var(--ac-border);
     border-radius: var(--ac-radius);
@@ -107,7 +110,7 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
        push the two apart. */
     height: var(--ac-height, auto);
     overflow: hidden;
-    padding: 1em 1.15em;
+    padding: 1em var(--ac-pad-x);
   }
 
   :host([expanded]) .ac-console,
@@ -336,13 +339,17 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
   .ac-trace {
     color: var(--ac-muted);
     font-family: var(--ac-font-mono);
-    font-size: 0.86em;
     line-height: 1.2;
-    /* The air between the answer above and the bar. The bar itself sits
-       flush on the composer, so all of the separation is on this side. */
-    margin-top: 1.5em;
+    /* Full bleed: the bar meets the console's borders instead of sitting
+       inside its padding. The margin is the console's own padding, which
+       is why it is read from the console's font size and not the tray's. */
+    margin-left: calc(-1 * var(--ac-pad-x));
+    margin-right: calc(-1 * var(--ac-pad-x));
+    margin-top: 1.25em;
     scrollbar-gutter: stable;
   }
+
+  .ac-trace-details { font-size: 0.86em; }
 
   /* The count stays on screen even at zero, so the line beside the
      live call never moves: "0 actions  Idle" is a resting state. */
