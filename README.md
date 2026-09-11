@@ -165,6 +165,48 @@ element, and slots in whatever it wants to override:
 </agent-console>
 ```
 
+The console takes its colour and font from wherever it sits, so it
+blends into whatever page it is dropped into: text colour and font
+family are inherited, the sizes are relative, and the border, surface
+and muted tones are neutrals that follow the page's own
+`color-scheme`. Its own furniture - the composer, the actions and the
+status line - is set in a mono stack, the way a console reads, while
+answers stay in the page's font. To move it further in the direction
+of a given design, either set the tokens, or style it from the
+outside with `::part()`:
+
+```html
+<style>
+  agent-console {
+    /* type */
+    --ac-font-size: 0.9375em;  /* everything else is relative */
+    --ac-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --ac-line-height: 1.6;     /* answers */
+
+    /* structure */
+    --ac-radius: 0.25rem;      /* corners */
+    --ac-gap: 0.5rem;          /* spacing inside the console */
+    --ac-height: 24rem;        /* default height (unset measures the placeholder) */
+    --ac-expanded-height: 40rem;
+    --ac-sidebar-width: 16rem; /* the actions sidebar */
+
+    /* colour: point these at the host's palette */
+    --ac-accent: currentColor; /* hovers, focus ring, links */
+    --ac-background: transparent;
+    --ac-border: rgba(128, 128, 128, 0.35);
+    --ac-surface: rgba(128, 128, 128, 0.08);
+    --ac-muted: rgba(128, 128, 128, 1);
+  }
+
+  agent-console::part(console) { box-shadow: 0 1px 2px rgb(0 0 0 / 0.1); }
+  agent-console::part(input) { border-radius: 999px; }
+</style>
+```
+
+Every part is available: `console`, `main`, `body`, `answer`,
+`placeholder`, `status`, `actions`, `form`, `input`, `expand` and
+`reset`.
+
 <details>
 <summary>Routes</summary>
 <br>
