@@ -173,23 +173,35 @@ The console takes its colour and font from wherever it sits, so it
 blends into whatever page it is dropped into: text colour and font
 family are inherited, the sizes are relative, and the border, surface
 and muted tones are neutrals that follow the page's own
-`color-scheme`. Its own furniture - the composer, the trace and the
-status line - is set in a mono stack, the way a console reads, while
-answers stay in the page's font. A turn's tool calls are written into
-the transcript as they happen, so they are visible while they run and
-after they return, and they scroll with the answer instead of taking a
-panel of their own. `prompt` names the composer's prompt
-(`$` by default) and `placeholder` its placeholder text; the
-`reset-icon` slot replaces the reset button's icon. Expanding mirrors
-onto the host as the `expanded` attribute, so a page can dress the
-expanded console or take the viewport with it. To move it further in
-the direction of a given design, either set the tokens, or style it
-from the outside with `::part()`.
+`color-scheme`. Its own furniture - the composer, the count and the
+live line - is set in a mono stack, the way a console reads, while
+answers stay in the page's font.
 
-Every part is available: `console`, `body`, `answer`, `trace`,
-`trace-details`, `trace-summary`, `trace-label`, `trace-list`,
-`placeholder`, `status`, `form`, `prompt`, `input`, `expand` and
-`reset`:
+The console is a column: the answer, then a status bar, then the
+composer. The bar carries the count of tool calls on its left and the
+live line beside it - the tool that is running, "Thinking…" while the
+turn waits on the model, and "Idle" in between - so the console always
+says what it is doing. The list of calls is a disclosure away and opens
+downward, pushing the answer up rather than covering it, and the bar
+sits flush on the composer because it belongs to it.
+
+What a tool call reads as belongs to the host, not the component: a
+`tool.<name>.call` slot describes it while it runs, `tool.<name>.return`
+describes it once it has come back, and `tool.*.call-icon` and
+`tool.*.return-icon` supply the icons. The example above uses all four.
+
+`prompt` names the composer's prompt (`$` by default), `placeholder`
+its placeholder text, and `height` its height - unset, it measures the
+placeholder and takes that. The `reset-icon` slot replaces the reset
+button's icon, and expanding mirrors onto the host as the `expanded`
+attribute, so a page can dress the expanded console or take the viewport
+with it. To move it further in the direction of a given design, either
+set the tokens, or style it from the outside with `::part()`.
+
+Every part is available: `console`, `body`, `answer`, `placeholder`,
+`trace`, `trace-details`, `trace-summary`, `trace-toggle`,
+`trace-label`, `trace-list`, `status`, `form`, `prompt`, `input`,
+`expand` and `reset`:
 
 ```html
 <style>
@@ -200,9 +212,10 @@ Every part is available: `console`, `body`, `answer`, `trace`,
     --ac-line-height: 1.6;     /* answers */
 
     /* structure */
-    --ac-radius: 0.25rem;      /* corners */
-    --ac-gap: 0.5rem;          /* spacing inside the console */
-    --ac-height: 24rem;        /* default height (unset measures the placeholder) */
+    --ac-radius: 0.25rem;      /* the console's corners */
+    --ac-chip-radius: 0.375rem;/* code blocks */
+    --ac-gap: 0.625rem;        /* between the composer's controls */
+    --ac-height: 24rem;        /* unset measures the placeholder */
     --ac-expanded-height: 40rem;
 
     /* colour: point these at the host's palette */
@@ -213,8 +226,11 @@ Every part is available: `console`, `body`, `answer`, `trace`,
     --ac-muted: rgba(128, 128, 128, 1);
   }
 
-  agent-console::part(console) { box-shadow: 0 1px 2px rgb(0 0 0 / 0.1); }
-  agent-console::part(input) { border-radius: 999px; }
+  /* The bar opens the list, so it answers to the pointer. */
+  agent-console::part(trace-summary):hover { color: var(--accent, currentColor); }
+
+  /* The live line carries the ink; the count stays muted. */
+  agent-console::part(status) { color: var(--fg, currentColor); }
 </style>
 ```
 

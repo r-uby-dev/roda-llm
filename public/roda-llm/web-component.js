@@ -437,7 +437,7 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
     border-top: 1px solid var(--ac-border);
     display: flex;
     font-family: var(--ac-font-mono);
-    gap: 0.57em;
+    gap: var(--ac-gap);
     padding-top: 0.72em;
   }
 
