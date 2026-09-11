@@ -133,7 +133,7 @@ run App
 
 ##### index.erb
 
-The `<agent>` web component can render a console that you can use
+The `<agent-console>` web component can render a console that you can use
 to talk to agent. The console can be rendered server-side, so
 you can prepopulate the content of the console with a placeholder
 or initial state before handing it over to the client side to
@@ -149,7 +149,7 @@ element, and slots in whatever it wants to override:
 ```html
 <script src="/roda-llm/web-component.js"></script>
 
-<agent name="theo">
+<agent-console agent="theo">
   <div slot="placeholder">
     <p>Hi! Ask me anything about the 4.4BSD manual.</p>
   </div>
@@ -162,7 +162,7 @@ element, and slots in whatever it wants to override:
 
   <span slot="tool.*.call">Running {name}…</span>
   <span slot="tool.*.return">Done</span>
-</agent>
+</agent-console>
 ```
 
 <details>
