@@ -173,16 +173,19 @@ The console takes its colour and font from wherever it sits, so it
 blends into whatever page it is dropped into: text colour and font
 family are inherited, the sizes are relative, and the border, surface
 and muted tones are neutrals that follow the page's own
-`color-scheme`. Its own furniture - the composer, the actions and the
+`color-scheme`. Its own furniture - the composer, the trace and the
 status line - is set in a mono stack, the way a console reads, while
-answers stay in the page's font. `prompt` names the composer's prompt
+answers stay in the page's font. A turn's tool calls are written into
+the transcript as they happen, so they are visible while they run and
+after they return, and they scroll with the answer instead of taking a
+panel of their own. `prompt` names the composer's prompt
 (`$` by default) and `placeholder` its placeholder text; the
 `reset-icon` slot replaces the reset button's icon. To move it further
 in the direction of a given design, either set the tokens, or style it
 from the outside with `::part()`.
 
-Every part is available: `console`, `main`, `body`, `answer`,
-`placeholder`, `status`, `actions`, `form`, `input`, `expand` and
+Every part is available: `console`, `body`, `answer`, `trace`,
+`placeholder`, `status`, `form`, `prompt`, `input`, `expand` and
 `reset`:
 
 ```html
@@ -198,7 +201,6 @@ Every part is available: `console`, `main`, `body`, `answer`,
     --ac-gap: 0.5rem;          /* spacing inside the console */
     --ac-height: 24rem;        /* default height (unset measures the placeholder) */
     --ac-expanded-height: 40rem;
-    --ac-sidebar-width: 16rem; /* the actions sidebar */
 
     /* colour: point these at the host's palette */
     --ac-accent: currentColor; /* hovers, focus ring, links */
