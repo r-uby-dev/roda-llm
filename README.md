@@ -148,6 +148,7 @@ element, and slots in whatever it wants to override:
 
 ```html
 <script src="/roda-llm/htmlelement.js"></script>
+
 <agent-console agent="theo" prompt="&gt;">
   <div slot="placeholder">
     <p>Ask me anything about the 4.4BSD manual.</p>
