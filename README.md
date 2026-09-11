@@ -81,7 +81,7 @@ require "roda-llm"
 class Theo < ActiveRecord::Base
   acts_as_agent do |agent|
     agent.set name: "theo",
-              description: "a chatbot for the 4.4bsd.dev website",
+              description: "a chatbot for the r.uby.dev website",
               instructions: proc { File.read("prompt.md") },
               tools: :tools
   end
@@ -151,7 +151,7 @@ element, and slots in whatever it wants to override:
 
 <agent-console agent="theo">
   <div slot="placeholder">
-    <p>Hi! Ask me anything about the 4.4BSD manual.</p>
+    <p>Ask me anything about the 4.4BSD manual.</p>
   </div>
 
   <img slot="tool.read-man.call-icon" src="icons/man-call-icon.svg">
