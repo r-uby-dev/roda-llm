@@ -169,14 +169,6 @@ element, and slots in whatever it wants to override:
 </agent-console>
 ```
 
-The console takes its colour and font from wherever it sits, so it
-blends into whatever page it is dropped into: text colour and font
-family are inherited, the sizes are relative, and the border, surface
-and muted tones are neutrals that follow the page's own
-`color-scheme`. Its own furniture - the composer, the count and the
-live line - is set in a mono stack, the way a console reads, while
-answers stay in the page's font.
-
 The console is a column: the answer, then a status bar, then the
 composer. The bar carries the count of tool calls on its left and the
 live line beside it - the tool that is running, "Thinking…" while the
@@ -195,9 +187,22 @@ its placeholder text, and `height` its height - unset, it measures the
 placeholder and takes that. The `reset-icon` slot replaces the reset
 button's icon, and expanding mirrors onto the host as the `expanded`
 attribute, so a page can dress the expanded console or take the viewport
-with it. To move it further in the direction of a given design, either
-set the tokens, or style it from the outside with `::part()`.
+with it.
 
+##### styles
+
+The console takes its colour and font from wherever it sits: text colour
+and font family are inherited, the sizes are relative, and the border,
+surface and muted tones are neutrals that follow the page's own
+`color-scheme`.
+
+Its furniture - the composer, the count and the live line - reads in a
+mono stack the way a console does, while answers stay in the page's font,
+and everything is sized in em from `--ac-font-size`, so one value moves
+the whole thing.
+
+Beyond that, the tokens below are the whole surface: set them to point
+the console at a palette, or style it from the outside with `::part()`.
 Every part is available: `console`, `body`, `answer`, `placeholder`,
 `trace`, `trace-details`, `trace-summary`, `trace-toggle`,
 `trace-label`, `trace-list`, `status`, `form`, `prompt`, `input`,
