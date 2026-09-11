@@ -169,26 +169,6 @@ element, and slots in whatever it wants to override:
 </agent-console>
 ```
 
-The console is a column: the answer, then a status bar, then the
-composer. The bar carries the count of tool calls on its left and the
-live line beside it - the tool that is running, "Thinking…" while the
-turn waits on the model, and "Idle" in between - so the console always
-says what it is doing. The list of calls is a disclosure away and opens
-downward, pushing the answer up rather than covering it, and the bar
-sits flush on the composer because it belongs to it.
-
-What a tool call reads as belongs to the host, not the component: a
-`tool.<name>.call` slot describes it while it runs, `tool.<name>.return`
-describes it once it has come back, and `tool.*.call-icon` and
-`tool.*.return-icon` supply the icons. The example above uses all four.
-
-`prompt` names the composer's prompt (`$` by default), `placeholder`
-its placeholder text, and `height` its height - unset, it measures the
-placeholder and takes that. The `reset-icon` slot replaces the reset
-button's icon, and expanding mirrors onto the host as the `expanded`
-attribute, so a page can dress the expanded console or take the viewport
-with it.
-
 ##### styles
 
 The console takes its colour and font from wherever it sits: text colour
