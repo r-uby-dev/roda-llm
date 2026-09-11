@@ -133,9 +133,9 @@ run App
 
 ##### index.erb
 
-The `<agent-console>` web component can render a console that you can use
-to talk to agent. The console can be rendered server-side, so
-you can prepopulate the content of the console with a placeholder
+The `<agent-console>` HTML element can render a console that
+you can use to talk to agent. The console can be rendered server-side,
+so you can prepopulate the content of the console with a placeholder
 or initial state before handing it over to the client side to
 render.
 
@@ -147,8 +147,7 @@ rendered into a shadow root, so an application only renders the
 element, and slots in whatever it wants to override:
 
 ```html
-<script src="/roda-llm/web-component.js"></script>
-
+<script src="/roda-llm/htmlelement.js"></script>
 <agent-console agent="theo" prompt="&gt;">
   <div slot="placeholder">
     <p>Ask me anything about the 4.4BSD manual.</p>

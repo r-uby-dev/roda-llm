@@ -16,27 +16,27 @@ module LLM::Roda
 
     ##
     # @return [String]
-    #  The built web component bundled in the gem.
+    #  The built console element bundled in the gem.
     def source
       gem = Gem.loaded_specs["roda-llm"]
       root = gem ? gem.full_gem_path : File.expand_path("../../../..", __dir__)
-      File.join(root, "public", "roda-llm", "web-component.js")
+      File.join(root, "public", "roda-llm", "htmlelement.js")
     end
 
     ##
     # @return [String]
-    #  Where the web component should live in the host app.
+    #  Where the element should live in the host app.
     def target
-      File.join(Dir.pwd, "public", "roda-llm", "web-component.js")
+      File.join(Dir.pwd, "public", "roda-llm", "htmlelement.js")
     end
 
     ##
-    # Installs the web component into the host application.
+    # Installs the console element into the host application.
     # @return [String]
     #  The path where asset was installed
     def install
       if not File.file?(source)
-        abort "roda-llm web component not found: #{source}"
+        abort "roda-llm console element not found: #{source}"
       end
       mkdir_p(File.dirname(target))
       cp(source, target)
@@ -46,7 +46,7 @@ module LLM::Roda
 end
 
 namespace :'roda:llm:assets' do
-  desc "install the web component into the host application"
+  desc "install the console element into the host application"
   task :install do
     puts "ok: #{LLM::Roda::Rake::Assets.install}"
   end

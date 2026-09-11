@@ -4,8 +4,8 @@
   "private": true,
   "description": "Agent console web component for roda-llm",
   "scripts": {
-    "build": "esbuild lib/roda/plugins/agent/assets/web-component.js --bundle --minify --format=iife --outfile=public/roda-llm/web-component.js",
-    "watch": "esbuild lib/roda/plugins/agent/assets/web-component.js --bundle --minify --format=iife --outfile=public/roda-llm/web-component.js --watch"
+    "build": "esbuild lib/roda/plugins/agent/assets/htmlelement.js --bundle --minify --format=iife --outfile=public/roda-llm/htmlelement.js",
+    "watch": "esbuild lib/roda/plugins/agent/assets/htmlelement.js --bundle --minify --format=iife --outfile=public/roda-llm/htmlelement.js --watch"
   },
   "dependencies": {
     "marked": "^15.0.0",

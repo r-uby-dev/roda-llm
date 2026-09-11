@@ -9,8 +9,8 @@ RSpec.describe LLM::Roda::Rake::Assets do
   describe ".source" do
     subject(:source) { assets.source }
 
-    it "points at the bundled web component" do
-      expect(source).to end_with("public/roda-llm/web-component.js")
+    it "points at the bundled console element" do
+      expect(source).to end_with("public/roda-llm/htmlelement.js")
     end
 
     it "exists in the gem" do
@@ -26,13 +26,13 @@ RSpec.describe LLM::Roda::Rake::Assets do
     after { FileUtils.remove_entry(dir) }
 
     it "resolves under the host public directory" do
-      expect(target).to eq(File.join(dir, "public", "roda-llm", "web-component.js"))
+      expect(target).to eq(File.join(dir, "public", "roda-llm", "htmlelement.js"))
     end
   end
 
   describe ".install" do
     let(:dir) { Dir.mktmpdir }
-    let(:installed) { File.join(dir, "public", "roda-llm", "web-component.js") }
+    let(:installed) { File.join(dir, "public", "roda-llm", "htmlelement.js") }
 
     before { allow(Dir).to receive(:pwd).and_return(dir) }
     after { FileUtils.remove_entry(dir) }
