@@ -210,9 +210,9 @@ RSpec.describe LLM::Roda do
         end
       end
 
-      it "streams an error" do
+      it "streams an error, and says why on stderr" do
         post "/agents/theo", q: "hi"
-        body.call(stream)
+        expect { body.call(stream) }.to output(/boom \(RuntimeError\)/).to_stderr
         expect(stream).to have_received(:write).with(%(event: onError\ndata: {"error":"internal server error"}\n\n))
       end
     end

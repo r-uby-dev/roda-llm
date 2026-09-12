@@ -6,12 +6,14 @@ module Roda::RodaPlugins::Agent
     # Stream the agent to the caller.
     # @param [String] name
     # @param [LLM::Agent] agent
+    # @param [String] q
     # @return [void]
-    def stream_agent!(agent, params, sse)
-      stream = agent_stream!(agent).new(sse).tap(&:hello)
-      res = agent.talk(params["q"], stream:)
+    def stream_agent!(name, agent, q, sse)
+      stream = agent_stream!(name).new(sse).tap(&:hello)
+      res = agent.talk(q, stream:)
       stream&.goodbye(res:)
-    rescue
+    rescue => e
+      warn("roda-llm: #{e.full_message}")
       stream&.error(message: "internal server error")
     end
 

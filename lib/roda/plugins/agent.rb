@@ -93,11 +93,17 @@ module Roda::RodaPlugins
           # check is a no-op unless the host loads `route_csrf`.
           resolver!(name).check_csrf!
           agent = upsert_agent!(name)
+
+          ##
+          # Read the prompt while the request is still in hand. The body
+          # below runs after the request has been served, when there is no
+          # rack.input left to read a parameter from.
+          q = params["q"]
           persist_session(response.headers, session) if respond_to?(:persist_session)
           halt [
             200,
             response.headers.merge(Roda::RodaPlugins::SSE::RequestMethods::HEADERS),
-            Roda::RodaPlugins::SSE::Body.new(proc { |sse| stream_agent!(agent, params, sse) })
+            Roda::RodaPlugins::SSE::Body.new(proc { |sse| stream_agent!(name, agent, q, sse) })
           ]
         end
       end
