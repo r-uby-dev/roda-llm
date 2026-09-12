@@ -79,6 +79,12 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
     --ac-chip-radius: 0.375rem;
     --ac-gap: 0.625rem;
     --ac-expanded-height: 28rem;
+    /* How far the reading column's first line sits from its top, on the
+       greeting and on a streamed answer alike. Zero by default, so an
+       answer starts flush; a host whose greeting carries a leading margin
+       sets it to match, and the text then holds still when the first
+       response arrives. */
+    --ac-lead: 0;
     /* Colour, taken from the page when the page names its palette -
        custom properties inherit into a shadow tree, so a site that
        defines --bg/--line/--surface/--muted/--accent gets the console
@@ -139,6 +145,16 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
   }
 
   .ac-answer { flex: 0 0 auto; line-height: var(--ac-line-height, 1.6); }
+
+  /* One inset for the reading column's first line. The answer's own first
+     block has its top margin zeroed below, and whatever a host slots in as
+     a placeholder may carry one of its own, so the inset is set on the two
+     boxes instead: greeting and answer start on the same line, and the
+     text does not jump up when the first response arrives. */
+  .ac-answer,
+  .ac-placeholder {
+    margin-top: var(--ac-lead, 0);
+  }
 
   /* The answer arrives in two parts: the settled blocks, which are only
      ever appended to, and the trailing block, which is re-rendered as it

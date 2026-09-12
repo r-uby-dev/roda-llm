@@ -202,6 +202,7 @@ Every part is available: `console`, `body`, `answer`, `placeholder`,
     --ac-gap: 0.625rem;        /* between the composer's controls */
     --ac-height: 24rem;        /* unset measures the placeholder */
     --ac-expanded-height: 40rem;
+    --ac-lead: 0;              /* first line of the greeting and the answer */
 
     /* colour: point these at the host's palette */
     --ac-accent: currentColor; /* hovers, focus ring, links */
