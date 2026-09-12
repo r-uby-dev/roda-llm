@@ -125,23 +125,18 @@ RSpec.describe LLM::Roda do
     let(:stream) { double(write: nil, close_write: nil) }
     let(:json) { LLM.json.load(last_response.body) }
 
-    describe "POST /agents/:name" do
-      before { post "/agents/theo" }
-
-      it "includes the agent's id" do
-        expect(json).to eq({"ok" => true, "id" => 1})
-      end
-    end
-
     describe "GET /agents/:name" do
       before do
-        post "/agents/theo"
         get "/agents/theo", q: "hi"
       end
 
       it "streams the agent's answer" do
         body.call(stream)
         expect(stream).to have_received(:write).with(%(event: onGoodbye\ndata: {"answer":"hi"}\n\n))
+      end
+
+      it "answers as an event stream" do
+        expect(last_response.headers["content-type"]).to eq("text/event-stream")
       end
 
       context "when the agent declares a stream" do
@@ -172,17 +167,12 @@ RSpec.describe LLM::Roda do
       end
     end
 
-    context "when the resolver has no agent" do
+    context "when the resolver finds no agent" do
       let(:resolver) do
         Class.new(LLM::Roda::Resolver) do
           def find(_klass) = nil
           def create(klass) = klass.new(LLM.openai(key: "test"))
         end
-      end
-
-      it "creates the agent" do
-        post "/agents/theo"
-        expect(json).to eq({"ok" => true, "id" => 1})
       end
 
       it "talks to an agent that has not been created yet" do

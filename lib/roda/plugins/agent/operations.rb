@@ -2,23 +2,32 @@
 
 module Roda::RodaPlugins::Agent
   module Operations
-    def create_agent!(name)
-      klass = agent_class!(name)
-      resolver = resolver!(name)
-      agent = resolver.find(klass) || resolver.create(klass)
-      {ok: true, id: agent.id}
-    end
-
-    def update_agent!(name, params, sse)
-      klass = agent_class!(name)
-      stream = agent_stream!(name).new(sse).tap(&:hello)
-      agent = find_or_create!(name)
+    ##
+    # Stream the agent to the caller.
+    # @param [String] name
+    # @param [LLM::Agent] agent
+    # @return [void]
+    def stream_agent!(agent, params, sse)
+      stream = agent_stream!(agent).new(sse).tap(&:hello)
       res = agent.talk(params["q"], stream:)
       stream&.goodbye(res:)
     rescue
       stream&.error(message: "internal server error")
     end
 
+    ##
+    # Find or create an agent.
+    # @param [String] name
+    # @return [LLM::Agent]
+    def upsert_agent!(name)
+      klass = agent_class!(name)
+      resolver = resolver!(name)
+      resolver.find(klass) || resolver.create(klass)
+    end
+
+    ##
+    # Destroy an agent.
+    # @return [Hash]
     def destroy_agent!(name)
       klass = agent_class!(name)
       resolver = resolver!(name)
@@ -28,39 +37,35 @@ module Roda::RodaPlugins::Agent
 
     private
 
-    ##
-    # Find or create an agent.
-    # @param [String] name
-    # @return [LLM::Agent]
-    def find_or_create!(name)
-      klass = agent_class!(name)
-      resolver = resolver!(name)
-      resolver.find(klass) || resolver.create(klass)
-    end
-
-    ##
-    # Build a resolver for the named agent, bound to the Roda
-    # application it belongs to and the request being served.
-    # @param [String] name
-    # @return [Roda::RodaPlugins::Agent::Resolver]
-    def resolver!(name)
-      agent_resolver!(name).new(scope, self)
-    end
-
     def agent_attributes!(name)
+      name = agent_name!(name)
       LLM::Object.from(roda_class.registry[name])
     end
 
     def agent_class!(name)
+      name = agent_name!(name)
       agent_attributes!(name)[:class]
     end
 
     def agent_resolver!(name)
+      name = agent_name!(name)
       agent_attributes!(name).resolver
     end
 
     def agent_stream!(name)
+      name = agent_name!(name)
       agent_attributes!(name).stream || LLM::Roda::Stream
+    end
+
+    def agent_name!(name)
+      (LLM::Agent === name and name.name) or
+      (name.respond_to?(:agent) and name.agent.name) or
+      (name)
+    end
+
+    def resolver!(name)
+      name = agent_name!(name)
+      agent_resolver!(name).new(scope, self)
     end
   end
 end

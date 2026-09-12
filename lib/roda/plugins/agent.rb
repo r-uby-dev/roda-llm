@@ -58,7 +58,6 @@ module Roda::RodaPlugins
       def agent!
         on("agents") do
           on String do |name|
-            post(true)   { [resolver!(name).check_csrf!, create_agent!(name)].last }
             delete(true) { [resolver!(name).check_csrf!, destroy_agent!(name)].last }
             stream!(name)
           end
@@ -83,12 +82,12 @@ module Roda::RodaPlugins
       # @return [void]
       def stream!(name)
         get do
-          find_or_create!(name)
+          agent = upsert_agent!(name)
           persist_session(response.headers, session) if respond_to?(:persist_session)
           halt [
             200,
             response.headers.merge(Roda::RodaPlugins::SSE::RequestMethods::HEADERS),
-            Roda::RodaPlugins::SSE::Body.new(proc { |sse| update_agent!(name, params, sse) })
+            Roda::RodaPlugins::SSE::Body.new(proc { |sse| stream_agent!(agent, params, sse) })
           ]
         end
       end
