@@ -16,15 +16,13 @@ Welcome to the canonical roda-llm repository.
 
 roda-llm is a [Roda](https://roda.jeremyevans.net) plugin that
 provides a framework for deploying multiple [llm.rb](https://github.com/r-uby-dev/llm#readme)
-agents within your Roda, Rack or Rails application. The HTTP endpoints are
-provided via a Roda app that can be mounted within your own
-Rack/Rails app. It makes it trivial to deploy multiple agents
-at scale while letting you focus on the code that makes your
-agent useful rather than the glue that makes it functional.
+agents within your Roda, Rack or Rails application.
 
-The plugin includes a custom HTML5 web element (`<agent-console>...</agent-console>`)
-that can be used to provide a web interface to an llm.rb agent
-with a little bit of HTML markup.
+The plugin includes a custom HTML5 element
+(`<agent-console>...</agent-console>`) that can be used to
+attach a web console to your agents. The `agent-console`
+element is provided by a small JavaScript file that is
+written in vanilla JavaScript.
 
 ## Install
 
@@ -137,23 +135,10 @@ element, and slots in whatever it wants to override:
 ```html
 <script src="/roda-llm/htmlelement.js"></script>
 
-<agent-console agent="theo" prompt="&gt;">
+<agent-console agent="theo">
   <div slot="placeholder">
     <p>Ask me anything about the 4.4BSD manual.</p>
   </div>
-
-  <svg slot="reset-icon" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
-    <path d="…"/>
-  </svg>
-
-  <img slot="tool.read-man.call-icon" src="icons/man-call-icon.svg">
-  <span slot="tool.read-man.call">Reading man page {arguments.name}</span>
-
-  <img slot="tool.read-man.return-icon" src="icons/man-return-icon.svg">
-  <span slot="tool.read-man.return">Read {count} man pages</span>
-
-  <span slot="tool.*.call">Running {name}…</span>
-  <span slot="tool.*.return">Done</span>
 </agent-console>
 ```
 
