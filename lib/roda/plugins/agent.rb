@@ -59,9 +59,37 @@ module Roda::RodaPlugins
         on("agents") do
           on String do |name|
             post(true)   { [resolver!(name).check_csrf!, create_agent!(name)].last }
-            sse          { |sse| update_agent!(name, params, sse) }
             delete(true) { [resolver!(name).check_csrf!, destroy_agent!(name)].last }
+            stream!(name)
           end
+        end
+      end
+
+      private
+
+      ##
+      # The stream endpoint. Since it streams, it cannot
+      # lean on Roda writing the session cookie at the end
+      # of the request: the response is halted with headers
+      # of its own, and the client is already reading
+      # the stream by then.
+      #
+      # So find or create the agent and persist the session
+      # first, then halt with those headers kept. Without that
+      # the agent is created but never found again, and every
+      # message starts a new conversation.
+      #
+      # @param [String] name
+      # @return [void]
+      def stream!(name)
+        get do
+          find_or_create!(name)
+          persist_session(response.headers, session) if respond_to?(:persist_session)
+          halt [
+            200,
+            response.headers.merge(Roda::RodaPlugins::SSE::RequestMethods::HEADERS),
+            Roda::RodaPlugins::SSE::Body.new(proc { |sse| update_agent!(name, params, sse) })
+          ]
         end
       end
     end

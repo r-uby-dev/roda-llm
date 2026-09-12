@@ -11,9 +11,8 @@ module Roda::RodaPlugins::Agent
 
     def update_agent!(name, params, sse)
       klass = agent_class!(name)
-      resolver = resolver!(name)
       stream = agent_stream!(name).new(sse).tap(&:hello)
-      agent = resolver.find(klass) || resolver.create(klass)
+      agent = find_or_create!(name)
       res = agent.talk(params["q"], stream:)
       stream&.goodbye(res:)
     rescue
@@ -28,6 +27,16 @@ module Roda::RodaPlugins::Agent
     end
 
     private
+
+    ##
+    # Find or create an agent.
+    # @param [String] name
+    # @return [LLM::Agent]
+    def find_or_create!(name)
+      klass = agent_class!(name)
+      resolver = resolver!(name)
+      resolver.find(klass) || resolver.create(klass)
+    end
 
     ##
     # Build a resolver for the named agent, bound to the Roda
