@@ -18,7 +18,7 @@ roda-llm is a [Roda](https://roda.jeremyevans.net) plugin that
 provides a framework for deploying multiple [llm.rb](https://github.com/r-uby-dev/llm#readme)
 agents within your Roda, Rack or Rails application. It provides
 a suite of tools that can add agentic features to your Ruby web
-applications with a minimal amount of code. 
+applications with a minimal amount of code.
 
 The plugin includes a custom HTML5 element
 (`<agent-console>...</agent-console>`) that can be used to
@@ -69,16 +69,10 @@ could be mounted within a host Rack or Rails application. It
 also gives you the opportunity to extend the plugin's functionality
 by extending the Roda subclass.
 
-A resolver has its own section later in the README.md but it is
-worth knowing that it is how you can implement callbacks
-that determine how an agent is found, saved, and created. The
-builtin session resolver uses a session-backed store to link the
-agent's database record to a browser-based user session.
-
-The `route_csrf` plugin is optional but recommended to prevent
-cross forgery attacks. It is largely optional because outside
-Roda it might be handled differently. It is generally a good
-default to opt into.
+A resolver is how a user of the plugin can choose how agent is
+created, found, and destroyed. It has access to the Roda application,
+the request object, and request parameters to help it decide how
+to create, find and destroy an agent.
 
 ```ruby
 class App < Roda
