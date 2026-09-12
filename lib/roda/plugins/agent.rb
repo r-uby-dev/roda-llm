@@ -67,21 +67,31 @@ module Roda::RodaPlugins
       private
 
       ##
-      # The stream endpoint. Since it streams, it cannot
-      # lean on Roda writing the session cookie at the end
-      # of the request: the response is halted with headers
-      # of its own, and the client is already reading
-      # the stream by then.
+      # The stream endpoint. It is a POST because the prompt travels in
+      # the body, and because it creates the agent when none is bound:
+      # a GET that mutates would be fair game for a prefetcher or a
+      # retry, and the prompt would end up in access logs with it.
       #
-      # So find or create the agent and persist the session
-      # first, then halt with those headers kept. Without that
-      # the agent is created but never found again, and every
-      # message starts a new conversation.
+      # Since it streams, it cannot lean on Roda writing the session
+      # cookie at the end of the request: the response is halted with
+      # headers of its own, and the client is already reading the
+      # stream by then.
+      #
+      # So find or create the agent and persist the session first, then
+      # halt with those headers kept. Without that the agent is created
+      # but never found again, and every message starts a new
+      # conversation.
       #
       # @param [String] name
       # @return [void]
       def stream!(name)
-        get do
+        post do
+          ##
+          # Guarded the way the delete is: a turn spends the visitor's
+          # tokens and can create an agent, so it changes state, and a
+          # cross-site page must not be able to start one. The token
+          # check is a no-op unless the host loads `route_csrf`.
+          resolver!(name).check_csrf!
           agent = upsert_agent!(name)
           persist_session(response.headers, session) if respond_to?(:persist_session)
           halt [

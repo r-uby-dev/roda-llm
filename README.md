@@ -232,8 +232,7 @@ choose, such as `/users/:id/agents`.
 
 | Method | Path | Behaviour |
 |---|---|---|
-| `POST`   | `/agents/<name>`       | create an agent of that class |
-| `GET`    | `/agents/<name>?q=...`  | (stream) talk to the agent - creates one if none is bound |
+| `POST`   | `/agents/<name>`       | (stream) talk to the agent - creates one if none is bound. The prompt is the `q` form field, and the host's `check_csrf!` guards the route when `route_csrf` is loaded |
 | `DELETE` | `/agents/<name>`       | destroy the bound agent |
 
 </details>

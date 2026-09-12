@@ -125,9 +125,9 @@ RSpec.describe LLM::Roda do
     let(:stream) { double(write: nil, close_write: nil) }
     let(:json) { LLM.json.load(last_response.body) }
 
-    describe "GET /agents/:name" do
+    describe "POST /agents/:name" do
       before do
-        get "/agents/theo", q: "hi"
+        post "/agents/theo", q: "hi"
       end
 
       it "streams the agent's answer" do
@@ -137,6 +137,26 @@ RSpec.describe LLM::Roda do
 
       it "answers as an event stream" do
         expect(last_response.headers["content-type"]).to eq("text/event-stream")
+      end
+
+      context "when the host loads route_csrf" do
+        let(:calls) { [] }
+        let(:resolver) do
+          calls = self.calls
+          Class.new(LLM::Roda::Resolver) do
+            define_method(:check_csrf!) { calls << :csrf }
+            define_method(:find) do |klass|
+              calls << :find
+              klass.new(LLM.openai(key: "test"))
+            end
+            def create(_klass) = nil
+            def destroy(_klass) = nil
+          end
+        end
+
+        it "checks the token before it touches the agent" do
+          expect(calls).to eq([:csrf, :find])
+        end
       end
 
       context "when the agent declares a stream" do
@@ -158,7 +178,7 @@ RSpec.describe LLM::Roda do
           [{class: theo, resolver:}, {class: other, resolver:}]
         end
 
-        before { get "/agents/other", q: "hi" }
+        before { post "/agents/other", q: "hi" }
 
         it "streams the answer of the agent named in the path" do
           body.call(stream)
@@ -176,7 +196,7 @@ RSpec.describe LLM::Roda do
       end
 
       it "talks to an agent that has not been created yet" do
-        get "/agents/theo", q: "hi"
+        post "/agents/theo", q: "hi"
         body.call(stream)
         expect(stream).to have_received(:write).with(%(event: onGoodbye\ndata: {"answer":"hi"}\n\n))
       end
@@ -191,7 +211,7 @@ RSpec.describe LLM::Roda do
       end
 
       it "streams an error" do
-        get "/agents/theo", q: "hi"
+        post "/agents/theo", q: "hi"
         body.call(stream)
         expect(stream).to have_received(:write).with(%(event: onError\ndata: {"error":"internal server error"}\n\n))
       end
