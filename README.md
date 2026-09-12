@@ -22,9 +22,9 @@ Rack/Rails app. It makes it trivial to deploy multiple agents
 at scale while letting you focus on the code that makes your
 agent useful rather than the glue that makes it functional.
 
-The plugin includes a custom HTML5 web element (`<agent-console>...</agent-console>)
+The plugin includes a custom HTML5 web element (`<agent-console>...</agent-console>`)
 that can be used to provide a web interface to an llm.rb agent
-with a little bit of HTML markup. 
+with a little bit of HTML markup.
 
 ## Install
 
