@@ -74,11 +74,12 @@ module Roda::RodaPlugins::Agent
     end
 
     ##
-    # No-op by default.
-    # Enable with the `route_csrf` plugin.
+    # Check the request's CSRF token. The agent plugin loads
+    # `:route_csrf` with the routes, so this is a real check
+    # rather than an invitation to add one.
     # @return [void]
     def check_csrf!
-      roda.check_csrf! if roda.respond_to?(:check_csrf!)
+      roda.check_csrf!
     end
   end
 end

@@ -85,7 +85,6 @@ to create, find and destroy an agent.
 ```ruby
 class App < Roda
   plugin :sessions, secret: ENV["SESSION_SECRET"]
-  plugin :route_csrf, check_header: true
   plugin :agent, agents: [{class: Theo, resolver: LLM::Roda::Resolver::Session}]
 
   route do |r|
@@ -210,10 +209,15 @@ being mounted within another Roda application or from
 namespace can be relative to another path that you
 choose, such as `/users/:id/agents`.
 
+All routes are protected by the `route_csrf` plugin. A
+page should include a token in `meta[name='_csrf']`
+or provide one explicitly via the `csrf` attribute
+on the `agent-console` element.
+
 | Method | Path | Behaviour |
 |---|---|---|
-| `POST`   | `/agents/<name>`       | (stream) talk to the agent - creates one if none is bound. The prompt is the `q` form field, and the host's `check_csrf!` guards the route when `route_csrf` is loaded |
-| `DELETE` | `/agents/<name>`       | destroy the bound agent |
+| `POST`   | `/agents/<name>`       | (stream) upserts (find or create) an agent |
+| `DELETE` | `/agents/<name>`       | destroys the agent |
 
 </details>
 

@@ -41,10 +41,23 @@ RSpec.describe LLM::Roda do
   let(:agents) { [{class: agent_class, resolver:}] }
   let(:app) do
     app = Class.new(Roda)
+    app.plugin(:sessions, secret: "x" * 64)
+    app.plugin(:route_csrf,
+      require_request_specific_tokens: false,
+      csrf_failure: :empty_403)
     app.plugin(:agent, agents:)
-    app.route { |r| r.agent! }
+    app.route do |r|
+      r.on("csrf") { csrf_token }
+      r.agent!
+    end
     app
   end
+
+  ##
+  # The token a layout would render into the page,
+  # and the header the console sends it back in.
+  let(:token) { get("/csrf"); last_response.body }
+  let(:csrf) { {"HTTP_X_CSRF_TOKEN" => token} }
 
   describe ".registry" do
     it "keys the agent by name" do
@@ -127,7 +140,7 @@ RSpec.describe LLM::Roda do
 
     describe "POST /agents/:name" do
       before do
-        post "/agents/theo", q: "hi"
+        post "/agents/theo", {q: "hi"}, csrf
       end
 
       it "streams the agent's answer" do
@@ -137,6 +150,11 @@ RSpec.describe LLM::Roda do
 
       it "answers as an event stream" do
         expect(last_response.headers["content-type"]).to eq("text/event-stream")
+      end
+
+      it "refuses a turn that carries no token" do
+        post "/agents/theo", {q: "hi"}
+        expect(last_response.status).to eq(403)
       end
 
       context "when the host loads route_csrf" do
@@ -178,7 +196,7 @@ RSpec.describe LLM::Roda do
           [{class: theo, resolver:}, {class: other, resolver:}]
         end
 
-        before { post "/agents/other", q: "hi" }
+        before { post "/agents/other", {q: "hi"}, csrf }
 
         it "streams the answer of the agent named in the path" do
           body.call(stream)
@@ -196,7 +214,7 @@ RSpec.describe LLM::Roda do
       end
 
       it "talks to an agent that has not been created yet" do
-        post "/agents/theo", q: "hi"
+        post "/agents/theo", {q: "hi"}, csrf
         body.call(stream)
         expect(stream).to have_received(:write).with(%(event: onGoodbye\ndata: {"answer":"hi"}\n\n))
       end
@@ -211,14 +229,14 @@ RSpec.describe LLM::Roda do
       end
 
       it "streams an error, and says why on stderr" do
-        post "/agents/theo", q: "hi"
+        post "/agents/theo", {q: "hi"}, csrf
         expect { body.call(stream) }.to output(/boom \(RuntimeError\)/).to_stderr
         expect(stream).to have_received(:write).with(%(event: onError\ndata: {"error":"internal server error"}\n\n))
       end
     end
 
     describe "DELETE /agents/:name" do
-      before { delete "/agents/theo" }
+      before { delete "/agents/theo", {}, csrf }
 
       it "responds with ok" do
         expect(json).to eq({"ok" => true})

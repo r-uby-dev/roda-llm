@@ -11,8 +11,10 @@ module Roda::RodaPlugins
 
     ##
     # Adds the Roda plugins the agent routes need. The host app
-    # owns `:sessions` and `:route_csrf`; here we only pull in
-    # the JSON/SSE/all_verbs/erb helpers the inline routes rely on.
+    # still owns `:sessions`, because the session is the host's
+    # business; `:route_csrf` comes with the routes, because they
+    # are the ones that need guarding (`check_header` so the token
+    # can arrive the way the console sends it).
     #
     # @param [Roda] app
     # @param [Hash] _options
@@ -21,6 +23,7 @@ module Roda::RodaPlugins
       app.plugin :json
       app.plugin :sse
       app.plugin :all_verbs
+      app.plugin :route_csrf, check_header: true
     end
 
     ##
@@ -89,8 +92,7 @@ module Roda::RodaPlugins
           ##
           # Guarded the way the delete is: a turn spends the visitor's
           # tokens and can create an agent, so it changes state, and a
-          # cross-site page must not be able to start one. The token
-          # check is a no-op unless the host loads `route_csrf`.
+          # cross-site page must not be able to start one.
           resolver!(name).check_csrf!
           agent = upsert_agent!(name)
 
