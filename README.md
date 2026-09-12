@@ -39,9 +39,10 @@ gem install roda-llm
 
 An agent is an ActiveRecord model that you own. The plugin
 provides HTTP endpoints and a web console that you can attach
-to your agents. An agent can implement its own tools, access
+to your agents. An agent can implement its own tools, use
 MCP tools, and pretty much anything else an llm.rb agent can
-do.
+do. An agent is stored in a single column on a single row as
+a JSON blob that can be optimized to use `jsonb` on postgres.
 
 
 ```ruby
