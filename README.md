@@ -37,6 +37,13 @@ gem install roda-llm
 
 ##### agent.rb
 
+An agent is an ActiveRecord model that you own. The plugin
+provides HTTP endpoints and a web console that you can attach
+to your agents. An agent can implement its own tools, access
+MCP tools, and pretty much anything else an llm.rb agent can
+do.
+
+
 ```ruby
 require "roda"
 require "roda-llm"
