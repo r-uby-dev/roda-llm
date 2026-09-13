@@ -96,7 +96,7 @@ module Roda::RodaPlugins
       # @param [String] name
       # @return [void]
       def stream!(name)
-        post do
+        post(true) do
           ##
           # Guarded the way the delete is: a turn spends the visitor's
           # tokens and can create an agent, so it changes state, and a
