@@ -216,6 +216,7 @@ on the `agent-console` element.
 
 | Method | Path | Behaviour |
 |---|---|---|
+| `GET`    | `/agents/<name>`       | Returns a JSON representation of the agent |
 | `POST`   | `/agents/<name>`       | (stream) upserts (find or create) an agent |
 | `DELETE` | `/agents/<name>`       | destroys the agent |
 

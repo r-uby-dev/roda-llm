@@ -76,10 +76,13 @@ module Roda::RodaPlugins::Agent
     ##
     # Check the request's CSRF token. The agent plugin loads
     # `:route_csrf` with the routes, so this is a real check
-    # rather than an invitation to add one.
+    # rather than an invitation to add one. GET is named in the
+    # methods to check because the describe route is a read of
+    # the visitor's own conversation, and the plugin leaves safe
+    # methods alone by default.
     # @return [void]
     def check_csrf!
-      roda.check_csrf!
+      roda.check_csrf!(check_request_methods: %w[GET POST DELETE PATCH PUT])
     end
   end
 end

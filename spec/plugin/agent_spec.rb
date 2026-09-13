@@ -138,6 +138,74 @@ RSpec.describe LLM::Roda do
     let(:stream) { double(write: nil, close_write: nil) }
     let(:json) { LLM.json.load(last_response.body) }
 
+    describe "GET /agents/:name" do
+      before { get "/agents/theo", {}, csrf }
+
+      it "describes the agent with the fields a client needs" do
+        expect(json.keys).to contain_exactly(
+          "name", "context_used", "context_available", "last_message"
+        )
+      end
+
+      it "names the agent" do
+        expect(json["name"]).to eq("theo")
+      end
+
+      it "reports how much of the context is used" do
+        expect(json["context_used"]).to be_a(Integer)
+      end
+
+      it "reports how much of the context is available" do
+        expect(json["context_available"]).to be > 0
+      end
+
+      it "has nothing to report before anything is said" do
+        expect(json["last_message"]).to be_nil
+      end
+
+      it "refuses a request that carries no token" do
+        get "/agents/theo"
+        expect(last_response.status).to eq(403)
+      end
+
+      context "when the agent has said something" do
+        let(:resolver) do
+          Class.new(LLM::Roda::Resolver) do
+            def find(klass)
+              klass.new(LLM.openai(key: "test")).tap do |agent|
+                agent.messages << LLM::Message.new(:assistant, "the last thing")
+              end
+            end
+            def create(klass) = klass.new(LLM.openai(key: "test"))
+            def destroy(_klass) = nil
+          end
+        end
+
+        it "reports the last thing that was said" do
+          expect(json["last_message"]).to eq("the last thing")
+        end
+      end
+
+      context "when no agent is bound" do
+        let(:resolver) do
+          Class.new(LLM::Roda::Resolver) do
+            def find(_klass) = nil
+            def create(klass) = klass.new(LLM.openai(key: "test"))
+            def destroy(_klass) = nil
+          end
+        end
+
+        it "describes the empty case" do
+          expect(json).to eq(
+            "name" => nil,
+            "context_used" => 0,
+            "context_available" => nil,
+            "last_message" => nil
+          )
+        end
+      end
+    end
+
     describe "POST /agents/:name" do
       before do
         post "/agents/theo", {q: "hi"}, csrf
@@ -228,10 +296,15 @@ RSpec.describe LLM::Roda do
         end
       end
 
-      it "streams an error, and says why on stderr" do
+      it "streams an error" do
+        post "/agents/theo", {q: "hi"}, csrf
+        body.call(stream)
+        expect(stream).to have_received(:write).with(%(event: onError\ndata: {"error":"internal server error"}\n\n))
+      end
+
+      it "says why on stderr" do
         post "/agents/theo", {q: "hi"}, csrf
         expect { body.call(stream) }.to output(/boom \(RuntimeError\)/).to_stderr
-        expect(stream).to have_received(:write).with(%(event: onError\ndata: {"error":"internal server error"}\n\n))
       end
     end
 

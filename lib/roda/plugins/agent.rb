@@ -61,6 +61,7 @@ module Roda::RodaPlugins
       def agent!
         on("agents") do
           on String do |name|
+            get(true)    { [resolver!(name).check_csrf!, agent_json!(name)].last }
             delete(true) { [resolver!(name).check_csrf!, destroy_agent!(name)].last }
             stream!(name)
           end
