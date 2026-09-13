@@ -135,9 +135,12 @@ the whole thing.
 Beyond that, the tokens below are the whole surface: set them to point
 the console at a palette, or style it from the outside with `::part()`.
 Every part is available: `console`, `body`, `answer`, `placeholder`,
-`last-message`, `trace`, `trace-details`, `trace-summary`, `trace-toggle`,
-`trace-label`, `trace-list`, `status`, `form`, `prompt`, `input`,
-`expand` and `reset`:
+`last-message`, `loading`, `trace`, `trace-details`, `trace-summary`,
+`trace-toggle`, `trace-label`, `trace-list`, `status`, `memory`,
+`memory-label`, `memory-divider`, `memory-icon`, `memory-meter`,
+`memory-fill`, `memory-value`, `memory-help`, `memory-help-figures`, `form`, `prompt`, `input`,
+`expand` and
+`reset`:
 
 ```html
 <style>
@@ -151,12 +154,19 @@ Every part is available: `console`, `body`, `answer`, `placeholder`,
     --ac-radius: 0.25rem;      /* the console's corners */
     --ac-chip-radius: 0.375rem;/* code blocks */
     --ac-gap: 0.625rem;        /* between the composer's controls */
-    --ac-height: 24rem;        /* unset measures the placeholder */
+    --ac-height: 24rem;        /* unset measures the placeholder, floored below */
+    --ac-height-min: 24em;     /* the floor under that measurement */
     --ac-expanded-height: 40rem;
     --ac-lead: 0;              /* above and below the reading column's text */
 
     /* colour: point these at the host's palette */
     --ac-accent: currentColor; /* hovers, focus ring, links */
+    --ac-memory: #1f6feb;          /* memory left: the progress-bar blue */
+    --ac-memory-low: #9a6700;      /* more than half spent: amber */
+    --ac-memory-critical: #cf222e; /* nearly full: red */
+    --ac-memory-ink: #fff;         /* the number written in the case */
+    --ac-help-background: #fff;    /* the meter's own explanation */
+    --ac-help-ink: #1f2328;
     --ac-background: transparent;
     --ac-border: rgba(128, 128, 128, 0.35);
     --ac-surface: rgba(128, 128, 128, 0.08);
