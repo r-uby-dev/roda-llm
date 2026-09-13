@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "roda-llm"
 require "active_record"
 require "erb"
 require "rake"
