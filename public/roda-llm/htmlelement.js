@@ -83,10 +83,11 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
        The padding belongs to the body rather than the console, so the
        furniture keeps the full width - the composer runs edge to edge, and
        the scrollbar sits at the console's edge instead of inside the text.
-       Expanded, the console takes most of the viewport and the column is
-       wider. */
-    --ac-pad-x: 1em;
-    --ac-pad-x-expanded: 3rem;
+       It gives a little with the viewport so a narrow screen does not lose
+       a third of its measure to the sides, and expanded - where the
+       console takes most of the viewport - the column is wider. */
+    --ac-pad-x: clamp(1.25em, 3.5vw, 2.25em);
+    --ac-pad-x-expanded: clamp(2.5em, 5.5vw, 5rem);
     /* The live line's ink: the page's text colour when the page names one,
        otherwise the same grey as the rest of the trace. It sits in a bar
        that is otherwise furniture, and it is the one thing on screen that
@@ -161,12 +162,6 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
     width: 100%;
   }
 
-  :host([expanded]) .ac-body,
-  .ac-console.is-expanded .ac-body {
-    padding-left: var(--ac-pad-x-expanded);
-    padding-right: var(--ac-pad-x-expanded);
-  }
-
   .ac-body {
     flex: 1 1 auto;
     min-height: 0;
@@ -186,6 +181,14 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
        line - a ripple through the answer as it arrives. */
     scrollbar-gutter: stable;
     scrollbar-width: thin;
+  }
+
+  /* Expanded, the console takes most of the viewport, so the column gets
+     more air. */
+  :host([expanded]) .ac-body,
+  .ac-console.is-expanded .ac-body {
+    padding-left: var(--ac-pad-x-expanded);
+    padding-right: var(--ac-pad-x-expanded);
   }
 
   .ac-answer {
