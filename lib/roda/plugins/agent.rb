@@ -116,5 +116,5 @@ module Roda::RodaPlugins
 end
 
 module LLM
-  Roda = Roda::RodaPlugins::Agent
+  Roda = ::Roda::RodaPlugins::Agent
 end

@@ -40,7 +40,7 @@ module Roda::RodaPlugins::Agent
       name = agent_name!(name)
       agent = resolver!(name).find(agent_class!(name))
       {
-        name: agent&.name,
+        name:,
         context_used: agent&.context_used.to_i,
         context_available: agent&.context_window,
         last_message: agent&.messages&.last&.content

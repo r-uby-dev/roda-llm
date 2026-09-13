@@ -135,7 +135,7 @@ the whole thing.
 Beyond that, the tokens below are the whole surface: set them to point
 the console at a palette, or style it from the outside with `::part()`.
 Every part is available: `console`, `body`, `answer`, `placeholder`,
-`trace`, `trace-details`, `trace-summary`, `trace-toggle`,
+`last-message`, `trace`, `trace-details`, `trace-summary`, `trace-toggle`,
 `trace-label`, `trace-list`, `status`, `form`, `prompt`, `input`,
 `expand` and `reset`:
 

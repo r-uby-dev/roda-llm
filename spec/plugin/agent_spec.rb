@@ -197,7 +197,7 @@ RSpec.describe LLM::Roda do
 
         it "describes the empty case" do
           expect(json).to eq(
-            "name" => nil,
+            "name" => "theo",
             "context_used" => 0,
             "context_available" => nil,
             "last_message" => nil
