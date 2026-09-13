@@ -138,7 +138,8 @@ Every part is available: `console`, `body`, `answer`, `placeholder`,
 `last-message`, `loading`, `trace`, `trace-details`, `trace-summary`,
 `trace-toggle`, `trace-label`, `trace-list`, `status`, `memory`,
 `memory-label`, `memory-divider`, `memory-icon`, `memory-meter`,
-`memory-fill`, `memory-value`, `memory-help`, `memory-help-figures`, `form`, `prompt`, `input`,
+`memory-fill`, `memory-value`, `memory-help`, `memory-help-figures`,
+`memory-help-figure`, `form`, `prompt`, `input`,
 `expand` and
 `reset`:
 
