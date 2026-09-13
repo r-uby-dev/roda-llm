@@ -84,5 +84,19 @@ module Roda::RodaPlugins::Agent
     def check_csrf!
       roda.check_csrf!(check_request_methods: %w[GET POST DELETE PATCH PUT])
     end
+
+    ##
+    # Called once a turn is done, with the agent that made it and the
+    # response it produced. The plugin has finished with both by then, so
+    # this is where a resolver writes down what the conversation came to -
+    # a transcript, a cache, a row of its own. A turn that raises never
+    # gets here.
+    #
+    # No-op by default.
+    # @param [LLM::Agent] agent
+    # @param [LLM::Response] res
+    # @return [void]
+    def finalize(agent, res)
+    end
   end
 end

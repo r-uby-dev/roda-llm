@@ -36,7 +36,14 @@ module Roda::RodaPlugins
       options[:agents].each do |agent|
         resolver, klass = agent[:resolver], agent[:class]
         name  = (klass < LLM::Agent ? klass : klass.agent).name
-        registry[name] = LLM::Object.from agent.slice(:class, :stream).merge!(resolver:)
+        ##
+        # Everything the host put in the entry, less the two keys the
+        # plugin consumes. A host may carry more than the plugin needs -
+        # the view layer reads a `placeholder` from here, for instance -
+        # and the plugin has no business discarding it.
+        registry[name] = LLM::Object.from(
+          agent.except(:class, :resolver).merge!(class: klass, resolver:)
+        )
       end
       app.opts["roda.llm.registry"] = registry
     end

@@ -11,6 +11,7 @@ module Roda::RodaPlugins::Agent
     def stream_agent!(name, agent, q, sse)
       stream = agent_stream!(name).new(sse).tap(&:hello)
       res = agent.talk(q, stream:)
+      resolver!(name).finalize(agent, res)
       stream&.goodbye(res:)
     rescue => e
       warn("roda-llm: #{e.full_message}")

@@ -288,6 +288,36 @@ RSpec.describe LLM::Roda do
       end
     end
 
+    context "when the resolver finalizes the turn" do
+      let(:calls) { [] }
+      let(:resolver) do
+        calls = self.calls
+        Class.new(LLM::Roda::Resolver) do
+          define_method(:find) { |klass| klass.new(LLM.openai(key: "test")) }
+          define_method(:create) { |klass| klass.new(LLM.openai(key: "test")) }
+          define_method(:destroy) { |_klass| nil }
+          define_method(:finalize) { |agent, res| calls << [agent, res] }
+        end
+      end
+
+      before { post "/agents/theo", {q: "hi"}, csrf }
+
+      it "finalizes the turn once" do
+        body.call(stream)
+        expect(calls.size).to eq(1)
+      end
+
+      it "with the agent the turn was made by" do
+        body.call(stream)
+        expect(calls.first.first).to be_a(LLM::Agent)
+      end
+
+      it "and the response it produced" do
+        body.call(stream)
+        expect(calls.first.last.content).to eq("hi")
+      end
+    end
+
     context "when the agent raises" do
       let(:agent_class) do
         Class.new(LLM::Agent) do

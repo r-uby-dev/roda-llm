@@ -80,7 +80,9 @@ by extending the Roda subclass.
 A resolver is how a user of the plugin can choose how agent is
 created, found, and destroyed. It has access to the Roda application,
 the request object, and request parameters to help it decide how
-to create, find and destroy an agent.
+to create, find and destroy an agent. It may also define
+`finalize(agent, res)`, which the plugin calls once a turn is done, so a
+resolver can write down what the conversation came to.
 
 ```ruby
 class App < Roda
@@ -245,7 +247,8 @@ users of the plugin control over how an agent is found, created
 and destroyed.
 
 [`LLM::Roda::Resolver`](lib/roda/plugins/agent/resolver.rb) is the abstract
-interface: subclasses implement `find`, `create` and `destroy`. A
+interface: subclasses implement `find`, `create` and `destroy`, and may
+implement `finalize`, which is called once a turn is done. A
 resolver is built with the Roda application and the request being served, and
 both are exposed as readers (`roda` and `request`), along with the request's
 `params`. The session belongs to the app, so it is reached through `roda`. An
@@ -272,6 +275,21 @@ class UserResolver < LLM::Roda::Resolver
   # @return [void]
   def destroy(klass)
     find(klass)&.destroy
+  end
+
+  ##
+  # Called once a turn is done, with the agent that made it and the
+  # response it produced, so a resolver can write down what the
+  # conversation came to.
+  #
+  # @param [LLM::Agent] agent
+  # @param [LLM::Response] res
+  # @return [void]
+  def finalize(agent, res)
+    ##
+    # Do something with the agent
+    # or the response it produced.
+    # For example: track token usage.
   end
 
   private
