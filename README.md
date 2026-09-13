@@ -251,9 +251,7 @@ interface: subclasses implement `find`, `create` and `destroy`, and may
 implement `finalize`, which is called once a turn is done. A
 resolver is built with the Roda application and the request being served, and
 both are exposed as readers (`roda` and `request`), along with the request's
-`params`. The session belongs to the app, so it is reached through `roda`. An
-example of a custom resolver binding an agent to the authenticated user
-instead of the user's session:
+`params`.
 
 ```ruby
 ##
@@ -278,9 +276,9 @@ class UserResolver < LLM::Roda::Resolver
   end
 
   ##
-  # Called once a turn is done, with the agent that made it and the
-  # response it produced, so a resolver can write down what the
-  # conversation came to.
+  # Called when a turn is done, with
+  # the agent that made it and the
+  # response it produced.
   #
   # @param [LLM::Agent] agent
   # @param [LLM::Response] res

@@ -316,6 +316,29 @@ RSpec.describe LLM::Roda do
         body.call(stream)
         expect(calls.first.last.content).to eq("hi")
       end
+
+      context "and is asked for both the agent and the turn" do
+        let(:ids) { [] }
+        let(:resolver) do
+          ids = self.ids
+          Class.new(LLM::Roda::Resolver) do
+            define_method(:find) { |klass| ids << object_id; klass.new(LLM.openai(key: "test")) }
+            define_method(:create) { |klass| klass.new(LLM.openai(key: "test")) }
+            define_method(:destroy) { |_klass| nil }
+            define_method(:finalize) { |_agent, _res| ids << object_id }
+          end
+        end
+
+        before { body.call(stream) }
+
+        it "is asked for both" do
+          expect(ids.size).to eq(2)
+        end
+
+        it "is the same instance for both, so it can carry what it found" do
+          expect(ids.uniq.size).to eq(1)
+        end
+      end
     end
 
     context "when the agent raises" do

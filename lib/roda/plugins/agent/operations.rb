@@ -88,7 +88,14 @@ module Roda::RodaPlugins::Agent
 
     def resolver!(name)
       name = agent_name!(name)
-      agent_resolver!(name).new(scope, self)
+      ##
+      # One per request, held by name: a resolver that
+      # finds or creates an agent for a turn is the same
+      # resolver that finalizes it, so it can carry what
+      # it learned from one to the other. It is still thrown
+      # away with the request, so nothing outlives the visitor
+      # who asked.
+      (@resolvers ||= {})[name] ||= agent_resolver!(name).new(scope, self)
     end
   end
 end

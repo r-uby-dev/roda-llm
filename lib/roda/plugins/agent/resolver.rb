@@ -14,8 +14,15 @@ module Roda::RodaPlugins::Agent
   # session is reached through `roda`, because it belongs to the app
   # rather than the resolver.
   #
+  # One is built for each request, and everything that needs it in that
+  # request shares it: the instance that finds or creates an agent is the
+  # instance that finalizes its turn, so a resolver can carry what it
+  # learned from the first call to the second. It lives no longer than the
+  # request, so it still reads what it needs from `roda`, `request` or
+  # `params` rather than expecting to be kept.
+  #
   # @abstract Subclasses must implement {#find}, {#create}
-  #   and {#destroy}.
+  #   and {#destroy}, and may implement {#finalize}.
   class Resolver
     ##
     # @return [Roda]
