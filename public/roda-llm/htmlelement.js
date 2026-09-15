@@ -60,7 +60,7 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
 `))f.startsWith("event:")?d=f.slice(6).trim():f.startsWith("data:")&&g.push(f.slice(5).trim());g.length&&w(d,g.join(`
 `))},x=()=>{let l;for(;(l=u.indexOf(`
 
-`))!==-1;){let d=u.slice(0,l);u=u.slice(l+2),k(d)}};e.addEventListener=(l,d)=>((o[l]||=[]).push(d),e),e.removeEventListener=(l,d)=>(o[l]=(o[l]||[]).filter(g=>g!==d),e),e.close=()=>{e.readyState!==e.CLOSED&&(e.readyState=e.CLOSED,c?.abort(),c=null)},e.active=()=>e.readyState===e.OPEN||e.readyState===e.CONNECTING,c=new AbortController;let p=c.signal;return fetch(n,{method:i,headers:b,body:m,signal:p,credentials:s?"include":"same-origin"}).then(async l=>{if(!l.ok)throw new Error(await l.text()||`${l.status}`);if(e.readyState===e.CLOSED)return;e.readyState=e.OPEN;let d=l.body.getReader(),g=new TextDecoder;for(;;){let{value:f,done:y}=await d.read();if(y)break;u+=g.decode(f,{stream:!0}),x()}e.close()}).catch(l=>{if(e.readyState===e.CLOSED||l.name==="AbortError"){e.close();return}e.close();let d=typeof MessageEvent=="function"?new MessageEvent("error",{data:l.message||String(l)}):{type:"error",data:l.message||String(l),message:l.message};for(let g of o.error||[])g(d)}),e}function Ye(t={}){let e=Object.create(null),{path:n,headers:a}=t,r=["onContent","onToolCall","onToolReturn","onGoodbye","onError"],s=null;return e.onContent=t.onContent||(i=>{}),e.onToolCall=t.onToolCall||(i=>{}),e.onToolReturn=t.onToolReturn||(i=>{}),e.onGoodbye=t.onGoodbye||(i=>{}),e.onError=t.onError||(i=>{}),e.attach=i=>{if(s)return e;let o=Ze({url:n,headers:a,body:{q:i}});for(let c of r)o.addEventListener(c,u=>{e[c]?.(JSON.parse(u.data)),(c==="onGoodbye"||c==="onError")&&e.close()});return o.addEventListener("error",c=>{e.onError({error:c.data}),e.close()}),s=o,e},e.close=()=>{s&&(s.close(),s=null)},e.active=()=>!!s,e}function Xe(){let t=Object.create(null);return t.active=new Map,t.completed=new Map,t.onToolCall=e=>{t.active.set(e.id,e.name)},t.onToolReturn=e=>{t.active.delete(e.id),t.completed.set(e.name,(t.completed.get(e.name)||0)+1)},t}function We(t={}){let e=Object.create(null),n=t.host,a=t.root,r=a.querySelector(".ac-answer"),s=a.querySelector(".ac-form"),i=a.querySelector(".ac-reset"),o=a.querySelector(".ac-expand"),c=Xe(),u={data:{...t.labels||{},fallback:{call:"Running {name} tool\u2026",return:"Tool {name} finished"}},for(h){let{data:E}=this;return E[h]||E["*"]||E.default||E.fallback},slot(h,E){for(let A of n.children){let L=A.getAttribute("slot");if(L===`tool.${h}.${E}`||L===`tool.*.${E}`)return A}},text(h,E,A){let L=E==="return"?"return":"call",_=this.slot(h,L);if(_)return _.textContent;let C=this.for(h);switch(E){case"return":return typeof C=="string"?A.count?C:void 0:C.return;default:return typeof C=="string"?C:C.call}},icon(h,E){let A=E==="return"?"return-icon":"call-icon",L=this.slot(h,A);if(L)return L;let _=this.for(h);return typeof _=="object"&&_&&_[A]?_[A]:f.default(E)},substitute(h,E){return h.replace(/\{(\w+)(?:\.(\w+))?\}/g,(A,L,_)=>L==="arguments"?_?E.arguments?.[_]??"":"":E[L]??"")},resolve(h,E){let A=this.text(h.name,E,h);return typeof A=="function"&&(A=A(h)),typeof A=="string"&&(A=this.substitute(A,h)),{text:A,icon:this.icon(h.name,E)}},active(h){return this.resolve(h,"active")},done(h){return this.resolve(h,"return")}},m={separator:a.querySelector(".ac-trace-separator"),label:a.querySelector(".ac-trace-label"),paint(){let h=b.el.children.length>0,E=w.entries.size;this.separator&&(this.separator.hidden=!h),this.label&&(this.label.textContent=`${E} ${E===1?"action":"actions"}`)}},b={el:a.querySelector(".ac-status"),thinking:"Thinking\u2026",render({text:h,icon:E,thinking:A}){let{el:L}=this;if(L.replaceChildren(),E&&L.append(E.cloneNode(!0)),h!=null){let _=document.createElement("span");_.textContent=h,A&&(_.className="is-thinking"),L.append(_)}m.paint()},follow(){let h=[...c.active.keys()].pop();if(h!=null){this.render(u.active({id:h,name:c.active.get(h)}));return}if(v){this.render({text:this.thinking,thinking:!0});return}this.render({})}},w={el:a.querySelector(".ac-trace"),details:a.querySelector(".ac-trace-details"),list:a.querySelector(".ac-trace-list"),entries:new Map,row(h){let{entries:E}=this,A=E.get(h.id);return A||(A=document.createElement("div"),A.className="ac-action",E.set(h.id,A),this.list.append(A)),A},paint(h,E,{text:A,icon:L}){let _=this.row(h);if(_.classList.toggle("is-running",E==="call"),_.classList.toggle("is-done",E==="return"),_.replaceChildren(),L&&_.append(L.cloneNode(!0)),A!=null){let C=document.createElement("span");C.textContent=A,_.append(C)}this.el.hidden=!1,this.summarise()},summarise(){m.paint()},call(h){this.paint(h,"call",u.active(h))},returned(h){this.paint(h,"return",u.done(h))},settle(){this.entries.forEach(h=>h.classList.remove("is-running"))},clear(){this.entries.clear(),this.list.replaceChildren(),this.details.open=!1,this.summarise()}},k={el:a.querySelector(".ac-placeholder"),last:a.querySelector(".ac-last-message"),show(){let{el:h}=this;h.hidden=!1,this.last&&(this.last.hidden=!0)},hide(){let{el:h}=this;h.hidden=!0,this.last&&(this.last.hidden=!0)},restore(h){this.last&&(t.renderer.render(h,this.last),this.el.classList.add("is-restored"),this.el.hidden=!0,this.last.hidden=!1)},forget(){this.last&&(this.el.classList.remove("is-restored"),this.el.hidden=!1,this.last.hidden=!0,this.last.innerHTML="")}},x={el:a.querySelector(".ac-loading"),show(){this.el&&(this.el.hidden=!1)},hide(){this.el&&(this.el.hidden=!0)}};k.hide(),x.show();let p={meter:a.querySelector(".ac-memory-meter"),fill:a.querySelector(".ac-memory-fill"),value:a.querySelector(".ac-memory-value"),figure:a.querySelector(".ac-memory-help-figure"),render(h){let E=Number(h?.context_used??0),A=Number(h?.context_available??0),L=A>0?100-E/A*100:100,_=Math.round(Math.min(100,Math.max(0,L)));this.fill&&(this.fill.style.width=`${_}%`),this.value&&(this.value.textContent=`${_}%`),this.figure&&(this.figure.textContent=_),this.meter&&(this.meter.setAttribute("aria-valuenow",String(_)),this.meter.classList.toggle("is-critical",_<=20),this.meter.classList.toggle("is-low",_>20&&_<=50))}},l={el:a.querySelector(".ac-memory-help"),meter:a.querySelector(".ac-memory-meter"),open(){let{el:h,meter:E}=this;if(!h||!E||typeof h.showPopover!="function")return;let A=E.getBoundingClientRect();h.showPopover(),this.opened=!0;let L=h.offsetWidth||0,_=Math.min(Math.max(A.left,8),Math.max(8,window.innerWidth-L-8)),C=A.top<(h.offsetHeight||0)+16;h.style.left=`${Math.round(_)}px`,h.style.top=`${Math.round(C?A.bottom:A.top)}px`,h.style.transform=C?"translateY(0.5em)":"translateY(calc(-100% - 0.5em))",h.classList.toggle("is-below",C)},close(){let{el:h}=this;h&&this.opened&&typeof h.hidePopover=="function"&&(this.opened=!1,h.hidePopover())}};l.meter&&(l.meter.addEventListener("pointerenter",()=>l.open()),l.meter.addEventListener("pointerleave",()=>l.close()),l.meter.addEventListener("focus",()=>l.open()),l.meter.addEventListener("blur",()=>l.close()));let d=h=>{x.hide(),p.render(h),!R&&(h?.last_message?k.restore(h.last_message):k.show())},g=async()=>{try{let h=await t.http.describe();if(!h.ok)throw new Error(String(h.status));d(await h.json())}catch{d(void 0)}},f={el:a,default(h){let{el:E}=this,A=E.querySelector(h==="return"?".ac-icon-return":".ac-icon-call");return A?A.content.cloneNode(!0):void 0}},y={el:a.querySelector(".ac-input"),get value(){return this.el.value},clear(){this.el.value=""},busy(h){this.el.readOnly=h},focus(){this.el.focus({preventScroll:!0})}},T="",v=!1,R=!1,F=Ye({path:t.path,headers:t.headers,onContent(h){v=!1,b.follow(),k.hide(),T+=h.text,t.renderer.render(T,r)},onToolCall(h){c.onToolCall(h),v=!1,b.follow(),w.call(h)},onToolReturn(h){c.onToolReturn(h),h.count=c.completed.get(h.name)||0,v=!0,b.follow(),w.returned(h)},onGoodbye(h){c.active.clear(),w.settle(),v=!1,b.follow(),y.busy(!1),T.trim()===""&&h.answer&&t.renderer.render(h.answer,r),g()},onError(h){c.active.clear(),w.settle(),v=!1,b.follow(),y.busy(!1),k.hide(),r.classList.add("is-error");let E="Something went wrong. Please try again.";try{E=h.error||E}catch{}r.textContent=E,g()}});return e.talk=h=>{F.active()||(R=!0,c.active.clear(),c.completed.clear(),T="",r.innerHTML="",r.classList.remove("is-error"),k.hide(),y.busy(!0),v=!0,w.clear(),b.follow(),F.attach(h),y.clear(),y.focus())},e.restore=h=>{x.hide(),h?.last_message?k.restore(h.last_message):k.show()},e.reset=async()=>{F.close();try{await t.http.destroy()}catch{}r.innerHTML="",r.classList.remove("is-error"),k.forget(),k.show(),c.active.clear(),c.completed.clear(),v=!1,R=!1,b.follow(),w.clear(),y.busy(!1),y.focus(),g()},e.focus=()=>y.focus(),e.clear=()=>{r.innerHTML="",r.classList.remove("is-error")},s.addEventListener("submit",h=>{h.preventDefault();let E=y.value.trim();E&&e.talk(E)}),i.addEventListener("click",e.reset),o.addEventListener("click",()=>{let h=a.classList.toggle("is-expanded");n.toggleAttribute("expanded",h),o.setAttribute("aria-expanded",h?"true":"false"),o.title=h?"Collapse chat":"Expand chat",y.focus()}),w.summarise(),b.follow(),g(),e}var Zt=`
+`))!==-1;){let d=u.slice(0,l);u=u.slice(l+2),k(d)}};e.addEventListener=(l,d)=>((o[l]||=[]).push(d),e),e.removeEventListener=(l,d)=>(o[l]=(o[l]||[]).filter(g=>g!==d),e),e.close=()=>{e.readyState!==e.CLOSED&&(e.readyState=e.CLOSED,c?.abort(),c=null)},e.active=()=>e.readyState===e.OPEN||e.readyState===e.CONNECTING,c=new AbortController;let p=c.signal;return fetch(n,{method:i,headers:b,body:m,signal:p,credentials:s?"include":"same-origin"}).then(async l=>{if(!l.ok)throw new Error(await l.text()||`${l.status}`);if(e.readyState===e.CLOSED)return;e.readyState=e.OPEN;let d=l.body.getReader(),g=new TextDecoder;for(;;){let{value:f,done:y}=await d.read();if(y)break;u+=g.decode(f,{stream:!0}),x()}e.close()}).catch(l=>{if(e.readyState===e.CLOSED||l.name==="AbortError"){e.close();return}e.close();let d=typeof MessageEvent=="function"?new MessageEvent("error",{data:l.message||String(l)}):{type:"error",data:l.message||String(l),message:l.message};for(let g of o.error||[])g(d)}),e}function Ye(t={}){let e=Object.create(null),{path:n,headers:a}=t,r=["onContent","onToolCall","onToolReturn","onGoodbye","onError"],s=null;return e.onContent=t.onContent||(i=>{}),e.onToolCall=t.onToolCall||(i=>{}),e.onToolReturn=t.onToolReturn||(i=>{}),e.onGoodbye=t.onGoodbye||(i=>{}),e.onError=t.onError||(i=>{}),e.attach=i=>{if(s)return e;let o=Ze({url:n,headers:a,body:{q:i}});for(let c of r)o.addEventListener(c,u=>{e[c]?.(JSON.parse(u.data)),(c==="onGoodbye"||c==="onError")&&e.close()});return o.addEventListener("error",c=>{e.onError({error:c.data}),e.close()}),s=o,e},e.close=()=>{s&&(s.close(),s=null)},e.active=()=>!!s,e}function Xe(){let t=Object.create(null);return t.active=new Map,t.completed=new Map,t.onToolCall=e=>{t.active.set(e.id,e.name)},t.onToolReturn=e=>{t.active.delete(e.id),t.completed.set(e.name,(t.completed.get(e.name)||0)+1)},t}function We(t={}){let e=Object.create(null),n=t.host,a=t.root,r=a.querySelector(".ac-answer"),s=a.querySelector(".ac-form"),i=a.querySelector(".ac-reset"),o=a.querySelector(".ac-expand"),c=Xe(),u={data:{...t.labels||{},fallback:{call:"Running {name} tool\u2026",return:"Tool {name} finished"}},for(h){let{data:E}=this;return E[h]||E["*"]||E.default||E.fallback},slot(h,E){for(let A of n.children){let L=A.getAttribute("slot");if(L===`tool.${h}.${E}`||L===`tool.*.${E}`)return A}},text(h,E,A){let L=E==="return"?"return":"call",_=this.slot(h,L);if(_)return _.textContent;let C=this.for(h);switch(E){case"return":return typeof C=="string"?A.count?C:void 0:C.return;default:return typeof C=="string"?C:C.call}},icon(h,E){let A=E==="return"?"return-icon":"call-icon",L=this.slot(h,A);if(L)return L;let _=this.for(h);return typeof _=="object"&&_&&_[A]?_[A]:f.default(E)},substitute(h,E){return h.replace(/\{(\w+)(?:\.(\w+))?\}/g,(A,L,_)=>L==="arguments"?_?E.arguments?.[_]??"":"":E[L]??"")},resolve(h,E){let A=this.text(h.name,E,h);return typeof A=="function"&&(A=A(h)),typeof A=="string"&&(A=this.substitute(A,h)),{text:A,icon:this.icon(h.name,E)}},active(h){return this.resolve(h,"active")},done(h){return this.resolve(h,"return")}},m={separator:a.querySelector(".ac-activity-separator"),label:a.querySelector(".ac-activity-label"),paint(){let h=b.el.children.length>0,E=w.entries.size;this.separator&&(this.separator.hidden=!h),this.label&&(this.label.textContent=`${E} ${E===1?"action":"actions"}`)}},b={el:a.querySelector(".ac-status"),thinking:"Thinking\u2026",render({text:h,icon:E,thinking:A}){let{el:L}=this;if(L.replaceChildren(),E&&L.append(E.cloneNode(!0)),h!=null){let _=document.createElement("span");_.textContent=h,A&&(_.className="is-thinking"),L.append(_)}m.paint()},follow(){let h=[...c.active.keys()].pop();if(h!=null){this.render(u.active({id:h,name:c.active.get(h)}));return}if(v){this.render({text:this.thinking,thinking:!0});return}this.render({})}},w={el:a.querySelector(".ac-activity"),details:a.querySelector(".ac-activity-details"),list:a.querySelector(".ac-activity-list"),entries:new Map,row(h){let{entries:E}=this,A=E.get(h.id);return A||(A=document.createElement("div"),A.className="ac-action",E.set(h.id,A),this.list.append(A)),A},paint(h,E,{text:A,icon:L}){let _=this.row(h);if(_.classList.toggle("is-running",E==="call"),_.classList.toggle("is-done",E==="return"),_.replaceChildren(),L&&_.append(L.cloneNode(!0)),A!=null){let C=document.createElement("span");C.textContent=A,_.append(C)}this.el.hidden=!1,this.summarise()},summarise(){m.paint()},call(h){this.paint(h,"call",u.active(h))},returned(h){this.paint(h,"return",u.done(h))},settle(){this.entries.forEach(h=>h.classList.remove("is-running"))},clear(){this.entries.clear(),this.list.replaceChildren(),this.details.open=!1,this.summarise()}},k={el:a.querySelector(".ac-placeholder"),last:a.querySelector(".ac-last-message"),show(){let{el:h}=this;h.hidden=!1,this.last&&(this.last.hidden=!0)},hide(){let{el:h}=this;h.hidden=!0,this.last&&(this.last.hidden=!0)},restore(h){this.last&&(t.renderer.render(h,this.last),this.el.classList.add("is-restored"),this.el.hidden=!0,this.last.hidden=!1)},forget(){this.last&&(this.el.classList.remove("is-restored"),this.el.hidden=!1,this.last.hidden=!0,this.last.innerHTML="")}},x={el:a.querySelector(".ac-loading"),show(){this.el&&(this.el.hidden=!1)},hide(){this.el&&(this.el.hidden=!0)}};k.hide(),x.show();let p={meter:a.querySelector(".ac-memory-meter"),fill:a.querySelector(".ac-memory-fill"),value:a.querySelector(".ac-memory-value"),figure:a.querySelector(".ac-memory-help-figure"),render(h){let E=Number(h?.context_used??0),A=Number(h?.context_available??0),L=A>0?100-E/A*100:100,_=Math.round(Math.min(100,Math.max(0,L)));this.fill&&(this.fill.style.width=`${_}%`),this.value&&(this.value.textContent=`${_}%`),this.figure&&(this.figure.textContent=_),this.meter&&(this.meter.setAttribute("aria-valuenow",String(_)),this.meter.classList.toggle("is-critical",_<=20),this.meter.classList.toggle("is-low",_>20&&_<=50))}},l={el:a.querySelector(".ac-memory-help"),meter:a.querySelector(".ac-memory-meter"),open(){let{el:h,meter:E}=this;if(!h||!E||typeof h.showPopover!="function")return;let A=E.getBoundingClientRect();h.showPopover(),this.opened=!0;let L=h.offsetWidth||0,_=Math.min(Math.max(A.left,8),Math.max(8,window.innerWidth-L-8)),C=A.top<(h.offsetHeight||0)+16;h.style.left=`${Math.round(_)}px`,h.style.top=`${Math.round(C?A.bottom:A.top)}px`,h.style.transform=C?"translateY(0.5em)":"translateY(calc(-100% - 0.5em))",h.classList.toggle("is-below",C)},close(){let{el:h}=this;h&&this.opened&&typeof h.hidePopover=="function"&&(this.opened=!1,h.hidePopover())}};l.meter&&(l.meter.addEventListener("pointerenter",()=>l.open()),l.meter.addEventListener("pointerleave",()=>l.close()),l.meter.addEventListener("focus",()=>l.open()),l.meter.addEventListener("blur",()=>l.close()));let d=h=>{x.hide(),p.render(h),!R&&(h?.last_message?k.restore(h.last_message):k.show())},g=async()=>{try{let h=await t.http.describe();if(!h.ok)throw new Error(String(h.status));d(await h.json())}catch{d(void 0)}},f={el:a,default(h){let{el:E}=this,A=E.querySelector(h==="return"?".ac-icon-return":".ac-icon-call");return A?A.content.cloneNode(!0):void 0}},y={el:a.querySelector(".ac-input"),get value(){return this.el.value},clear(){this.el.value=""},busy(h){this.el.readOnly=h},focus(){this.el.focus({preventScroll:!0})}},T="",v=!1,R=!1,F=Ye({path:t.path,headers:t.headers,onContent(h){v=!1,b.follow(),k.hide(),T+=h.text,t.renderer.render(T,r)},onToolCall(h){c.onToolCall(h),v=!1,b.follow(),w.call(h)},onToolReturn(h){c.onToolReturn(h),h.count=c.completed.get(h.name)||0,v=!0,b.follow(),w.returned(h)},onGoodbye(h){c.active.clear(),w.settle(),v=!1,b.follow(),y.busy(!1),T.trim()===""&&h.answer&&t.renderer.render(h.answer,r),g()},onError(h){c.active.clear(),w.settle(),v=!1,b.follow(),y.busy(!1),k.hide(),r.classList.add("is-error");let E="Something went wrong. Please try again.";try{E=h.error||E}catch{}r.textContent=E,g()}});return e.talk=h=>{F.active()||(R=!0,c.active.clear(),c.completed.clear(),T="",r.innerHTML="",r.classList.remove("is-error"),k.hide(),y.busy(!0),v=!0,w.clear(),b.follow(),F.attach(h),y.clear(),y.focus())},e.restore=h=>{x.hide(),h?.last_message?k.restore(h.last_message):k.show()},e.reset=async()=>{F.close();try{await t.http.destroy()}catch{}r.innerHTML="",r.classList.remove("is-error"),k.forget(),k.show(),c.active.clear(),c.completed.clear(),v=!1,R=!1,b.follow(),w.clear(),y.busy(!1),y.focus(),g()},e.focus=()=>y.focus(),e.clear=()=>{r.innerHTML="",r.classList.remove("is-error")},s.addEventListener("submit",h=>{h.preventDefault();let E=y.value.trim();E&&e.talk(E)}),i.addEventListener("click",e.reset),o.addEventListener("click",()=>{let h=a.classList.toggle("is-expanded");n.toggleAttribute("expanded",h),o.setAttribute("aria-expanded",h?"true":"false"),o.title=h?"Collapse chat":"Expand chat",y.focus()}),w.summarise(),b.follow(),g(),e}var Zt=`
 <style>
   :host {
     display: block;
@@ -79,7 +79,7 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
     --ac-chip-radius: 6px;
     --ac-gap: 0.571em;
     --ac-expanded-height: min(80vh, 44rem);
-    /* The console's own gutter: the furniture - the composer and the trace -
+    /* The console's own gutter: the furniture - the composer and the activity list -
        sits this far from the frame. */
     --ac-pad-x: 1.15em;
     /* The reading column: how much further the prose is inset than the
@@ -91,7 +91,7 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
     --ac-pad-column: clamp(0.5em, 1vw, 1em);
     --ac-pad-column-expanded: clamp(1.25em, 4vw, 4em);
     /* The live line's ink: the page's text colour when the page names one,
-       otherwise the same grey as the rest of the trace. It sits in a bar
+       otherwise the same grey as the rest of the activity. It sits in a bar
        that is otherwise furniture, and it is the one thing on screen that
        is moving. */
     --ac-ink: var(--fg, var(--ac-muted));
@@ -225,25 +225,24 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
   .ac-answer > :last-child { margin-bottom: 0; }
   .ac-answer.is-error { color: #b42318; }
 
-  /* Markdown, at the sizes r.uby.dev's console ran at: headings tamed
-     to 18/16/15/14px rather than arriving at the page's h1/h2 sizes,
-     code chips on --ac-surface, pre with the accent on its edge.
-     Everything is in em, so it follows --ac-font-size. */
+  /* Markdown, at the sizes r.uby.dev's console ran at. Headings sit at body
+     size in the body's own colour: the blue column and the weight are what
+     set them apart, not scale or hue. Code chips on --ac-surface, pre with
+     the accent on its edge. Everything is in em, so it follows
+     --ac-font-size. */
   .ac-answer h1,
   .ac-answer h2,
   .ac-answer h3,
   .ac-answer h4,
-  .ac-answer h5 {
+  .ac-answer h5,
+  .ac-answer h6 {
+    border-left: 3px solid var(--ac-accent);
+    font-size: 1em;
     font-weight: 600;
     line-height: 1.3;
     margin: 1em 0 0.57em;
+    padding-left: 0.5em;
   }
-
-  .ac-answer h1 { font-size: 1.29em; }
-  .ac-answer h2 { font-size: 1.14em; }
-  .ac-answer h3 { font-size: 1.07em; }
-  .ac-answer h4,
-  .ac-answer h5 { font-size: 1em; }
 
   .ac-answer p { margin: 0 0 0.86em; }
   .ac-answer ul,
@@ -253,11 +252,16 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
   .ac-answer strong { font-weight: 700; }
   .ac-answer em { color: var(--ac-muted); }
 
+  /* A link is the prose: the page's ink, and the page's weight. Nothing
+     marks it until the pointer arrives, when it bolds - which is the
+     signal the rest of the site uses too. */
   .ac-answer a {
-    color: var(--ac-accent);
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    color: inherit;
+    font-weight: inherit;
+    text-decoration: none;
   }
+
+  .ac-answer a:hover { font-weight: 700; }
 
   .ac-answer code {
     background: var(--ac-surface);
@@ -368,7 +372,7 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
   .ac-answer .token.italic { font-style: italic; }
 
   .ac-answer blockquote {
-    border-left: 2px solid var(--ac-border);
+    border-left: 3px solid var(--ac-accent);
     color: var(--ac-muted);
     margin: 0 0 0.75em;
     padding-left: 0.75em;
@@ -428,11 +432,11 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
 
   .ac-status .is-thinking { font-style: italic; }
 
-  /* A trace of what the agent did, sitting at the top of the console:
+  /* The activity of the running turn, sitting at the top of the console:
      the live line says what is happening now, the summary counts what
      has happened, and the list is a disclosure away. Native <details>,
      so opening it is not our JavaScript. */
-  .ac-trace {
+  .ac-activity {
     color: var(--ac-muted);
     /* The bar sits between the answer and the composer, so opening the
        list pushes the streamed content up and closing it lets the content
@@ -451,17 +455,17 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
     scrollbar-width: thin;
   }
 
-  .ac-trace-details { font-size: 0.86em; }
+  .ac-activity-details { font-size: 0.86em; }
 
   /* The count stays on screen even at zero, so the line beside the
      live call never moves: "0 actions  Idle" is a resting state. */
-  .ac-trace[hidden] { display: none; }
+  .ac-activity[hidden] { display: none; }
   /* The status bar: one line of information on the left - what is running,
      and how many calls have run - with the chevron alone at the right, so
      it marks the row as a disclosure without competing with either. It runs
      the console's full width and carries its own rules, and the list below
      opens out of it. */
-  .ac-trace-summary {
+  .ac-activity-summary {
     align-items: center;
     background: var(--ac-surface);
     border-bottom: 1px solid var(--ac-border);
@@ -474,15 +478,15 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
     user-select: none;
   }
 
-  .ac-trace-summary:hover { color: var(--ac-accent); }
+  .ac-activity-summary:hover { color: var(--ac-accent); }
 
-  .ac-trace-summary::-webkit-details-marker { display: none; }
+  .ac-activity-summary::-webkit-details-marker { display: none; }
 
   /* The dot separates the live line from the count, and is only there when
      the live line has something to say. */
-  .ac-trace-separator { color: var(--ac-muted); }
+  .ac-activity-separator { color: var(--ac-muted); }
 
-  .ac-trace-separator[hidden] { display: none; }
+  .ac-activity-separator[hidden] { display: none; }
 
   .ac-icon-chevron {
     flex: none;
@@ -492,9 +496,9 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
     transition: transform 0.15s ease;
   }
 
-  .ac-trace-details[open] .ac-icon-chevron { transform: rotate(180deg); }
+  .ac-activity-details[open] .ac-icon-chevron { transform: rotate(180deg); }
 
-  .ac-trace-list {
+  .ac-activity-list {
     display: flex;
     flex-direction: column;
     gap: 0.29em;
@@ -507,13 +511,13 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
 
   /* Opened while there is nothing to show: the list says so, rather than
      leaving a gap where the rows would have been. */
-  .ac-trace-empty {
+  .ac-activity-empty {
     color: var(--ac-muted);
     display: none;
     padding: 0.43em 0.72em 0;
   }
 
-  .ac-trace-details[open]:has(.ac-trace-list:empty) .ac-trace-empty { display: block; }
+  .ac-activity-details[open]:has(.ac-activity-list:empty) .ac-activity-empty { display: block; }
 
   @media (prefers-reduced-motion: reduce) {
     .ac-icon-chevron { transition: none; }
@@ -827,13 +831,13 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
     <div class="ac-answer ac-last-message" part="last-message" hidden></div>
   </div>
 
-  <div class="ac-trace" part="trace">
-    <details class="ac-trace-details" part="trace-details">
-      <summary class="ac-trace-summary" part="trace-summary">
+  <div class="ac-activity" part="activity">
+    <details class="ac-activity-details" part="activity-details">
+      <summary class="ac-activity-summary" part="activity-summary">
         <div class="ac-status" part="status" aria-live="polite"></div>
 
-        <span class="ac-trace-separator" part="trace-separator" aria-hidden="true">&middot;</span>
-        <span class="ac-trace-label" part="trace-label"></span>
+        <span class="ac-activity-separator" part="activity-separator" aria-hidden="true">&middot;</span>
+        <span class="ac-activity-label" part="activity-label"></span>
 
         <svg class="ac-icon ac-icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
 
@@ -857,9 +861,9 @@ Please report this to https://github.com/markedjs/marked.`,t){let a="<p>An error
         </div>
       </summary>
 
-      <div class="ac-trace-list" part="trace-list"></div>
+      <div class="ac-activity-list" part="activity-list"></div>
 
-      <div class="ac-trace-empty" part="trace-empty">I haven't run any actions yet</div>
+      <div class="ac-activity-empty" part="activity-empty">I haven't run any actions yet</div>
     </details>
   </div>
 

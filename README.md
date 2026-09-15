@@ -203,8 +203,11 @@ require "roda/llm/rake/migrations"
 
 The available tasks:
 
-    rake roda:llm:assets:install     # install the web component into the host application
+    rake roda:llm:assets:install     # install the console element into the host application
     rake roda:llm:db:create          # create the database
+    rake roda:llm:db:dump            # regenerate db/schema.rb from the database
+    rake roda:llm:db:load            # build the schema from db/schema.rb, then load db/seeds.rb
+    rake roda:llm:db:load_seed       # load db/seeds.rb
     rake roda:llm:db:migrate         # run pending migrations (creating the database first if needed)
     rake roda:llm:db:rollback        # rollback the most recent migration
     rake roda:llm:db:status          # show migration status
