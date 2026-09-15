@@ -137,13 +137,12 @@ the whole thing.
 Beyond that, the tokens below are the whole surface: set them to point
 the console at a palette, or style it from the outside with `::part()`.
 Every part is available: `console`, `body`, `answer`, `placeholder`,
-`last-message`, `loading`, `trace`, `trace-details`, `trace-summary`,
-`trace-toggle`, `trace-label`, `trace-list`, `status`, `memory`,
-`memory-label`, `memory-divider`, `memory-icon`, `memory-meter`,
-`memory-fill`, `memory-value`, `memory-help`, `memory-help-figures`,
-`memory-help-figure`, `form`, `prompt`, `input`,
-`expand` and
-`reset`:
+`last-message`, `loading`, `activity`, `activity-details`,
+`activity-summary`, `activity-separator`, `activity-label`,
+`activity-list`, `activity-empty`, `status`, `panels`, `panel`,
+`panel-divider`, `panel-group`, `panel-group-summary`, `panel-row`,
+`card`, `card-head`, `panel-title`, `panel-body`, `panel-note`, `form`,
+`prompt`, `input`, `expand` and `reset`:
 
 ```html
 <style>
@@ -164,12 +163,11 @@ Every part is available: `console`, `body`, `answer`, `placeholder`,
 
     /* colour: point these at the host's palette */
     --ac-accent: currentColor; /* hovers, focus ring, links */
-    --ac-memory: #1f6feb;          /* memory left: the progress-bar blue */
-    --ac-memory-low: #9a6700;      /* more than half spent: amber */
-    --ac-memory-critical: #cf222e; /* nearly full: red */
-    --ac-memory-ink: #fff;         /* the number written in the case */
-    --ac-help-background: #fff;    /* the meter's own explanation */
-    --ac-help-ink: #1f2328;
+    --ac-help-background: #fff;    /* a card's surface */
+    --ac-help-ink: #1f2328;        /* and its ink */
+    --ac-card-head: #0969da;       /* a card's heading: white on blue */
+    --ac-card-head-ink: #fff;
+    --ac-card-head-rule: #0550ae;  /* the rule under it */
     --ac-background: transparent;
     --ac-border: rgba(128, 128, 128, 0.35);
     --ac-surface: rgba(128, 128, 128, 0.08);
@@ -177,7 +175,7 @@ Every part is available: `console`, `body`, `answer`, `placeholder`,
   }
 
   /* The bar opens the list, so it answers to the pointer. */
-  agent-console::part(trace-summary):hover { color: var(--accent, currentColor); }
+  agent-console::part(panel):hover { color: var(--accent, currentColor); }
 
   /* The live line carries the ink; the count stays muted. */
   agent-console::part(status) { color: var(--fg, currentColor); }
