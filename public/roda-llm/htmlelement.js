@@ -121,6 +121,7 @@ Please report this to https://github.com/markedjs/marked.`,t){let r="<p>An error
   }
 
   .ac-console {
+    position: relative;
     --ac-bar-scale: 0.86;
     align-items: stretch;
     background: var(--ac-background);
@@ -555,7 +556,7 @@ Please report this to https://github.com/markedjs/marked.`,t){let r="<p>An error
     margin: 0;
     overflow: hidden;
     padding: 0;
-    position: fixed;
+    position: absolute;
     z-index: 3;
   }
 
@@ -607,7 +608,6 @@ Please report this to https://github.com/markedjs/marked.`,t){let r="<p>An error
 
   /* A closed popover is hidden by the user agent, but
      only when nothing author-level says otherwise. */
-  .ac-card:popover-open,
   .ac-card.is-open { display: flex; }
 
   /* Thin scrollbar, so a long trace reads as a pane and not
@@ -1073,6 +1073,14 @@ Please report this to https://github.com/markedjs/marked.`,t){let r="<p>An error
 </style>
 
 <div class="ac-console" part="console">
+<div class="ac-card ac-panel-view" part="card panel-view">
+  <div class="ac-card-head ac-panel-head" part="card-head panel-head">
+    <span class="ac-panel-title" part="panel-title"></span>
+    <button class="ac-panel-close" part="panel-close" type="button" aria-label="Close">&#215;</button>
+  </div>
+  <div class="ac-panel-body" part="panel-body"></div>
+  <div class="ac-panel-note" part="panel-note"></div>
+</div>
   <template class="ac-icon-call"><svg class="ac-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></template>
 
   <template class="ac-icon-return"><svg class="ac-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></template>
@@ -1101,16 +1109,7 @@ Please report this to https://github.com/markedjs/marked.`,t){let r="<p>An error
       <div class="ac-panels" part="panels"></div>
     </div>
 
-<!-- One card, reused by every panel. A popover, placed above the label
      it belongs to by the console. -->
-<div class="ac-card ac-panel-view" part="card panel-view" popover="manual">
-  <div class="ac-card-head ac-panel-head" part="card-head panel-head">
-    <span class="ac-panel-title" part="panel-title"></span>
-    <button class="ac-panel-close" part="panel-close" type="button" aria-label="Close">&#215;</button>
-  </div>
-  <div class="ac-panel-body" part="panel-body"></div>
-  <div class="ac-panel-note" part="panel-note"></div>
-</div>
 
 <!-- Panels arrive as <agent-panel> children. The
      slot finds them and keeps them off the page. -->
