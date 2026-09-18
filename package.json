@@ -5,13 +5,15 @@
   "description": "Agent console web component for roda-llm",
   "scripts": {
     "build": "esbuild lib/roda/plugins/agent/assets/htmlelement.js --bundle --minify --format=iife --outfile=public/roda-llm/htmlelement.js",
-    "watch": "esbuild lib/roda/plugins/agent/assets/htmlelement.js --bundle --minify --format=iife --outfile=public/roda-llm/htmlelement.js --watch"
+    "watch": "esbuild lib/roda/plugins/agent/assets/htmlelement.js --bundle --minify --format=iife --outfile=public/roda-llm/htmlelement.js --watch",
+    "test:jsdom": "node test/jsdom/real_test.mjs && node test/jsdom/overlap_test.mjs && node test/jsdom/slow_test.mjs"
   },
   "dependencies": {
     "marked": "^15.0.0",
     "prismjs": "^1.30.0"
   },
   "devDependencies": {
-    "esbuild": "^0.25.0"
+    "esbuild": "^0.25.0",
+    "jsdom": "^26.0.0"
   }
 }
