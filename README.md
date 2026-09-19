@@ -200,9 +200,7 @@ Every part is available: `console`, `body`, `answer`, `placeholder`,
 # The ActiveRecord tasks expect config/database.yml
 # to exist and have database settings scoped per
 # environment (standard Rails style).
-require "roda/llm/rake/assets"
-require "roda/llm/rake/active_record"
-require "roda/llm/rake/migrations"
+require "roda/llm/rake"
 ```
 
 The available tasks:
