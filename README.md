@@ -213,8 +213,8 @@ The available tasks:
     rake roda:llm:db:migrate         # run pending migrations (creating the database first if needed)
     rake roda:llm:db:rollback        # rollback the most recent migration
     rake roda:llm:db:status          # show migration status
+    rake roda:llm:g:agent[name]      # generate an agent: its class, its prompt, and its views
     rake roda:llm:g:migration[name]  # generate a migration (eg: rake roda:llm:g:migration[create_users])
-
 
 <details>
 <summary>Routes</summary>
