@@ -12,6 +12,12 @@
 
 > [r.uby.dev](https://r.uby.dev/llm) project.
 
+> **PRE-RELEASE SOFTWARE**
+> roda-llm has not yet made a public 0.1.0 release. It is available to
+> use via GitHub and it is actively used on
+> [r.uby.dev](https://r.uby.dev) website. Expect some rough edges before
+> a public release.
+
 Welcome to the canonical roda-llm repository.
 
 roda-llm is a [Roda](https://roda.jeremyevans.net) plugin that
