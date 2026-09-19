@@ -12,7 +12,7 @@
 
 > [r.uby.dev](https://r.uby.dev/llm) project.
 
-> **PRE-RELEASE SOFTWARE**  
+> **PRE-RELEASE SOFTWARE** <br>
 > roda-llm has not yet made a public 0.1.0 release. It is available to
 > use via GitHub and it is actively used on
 > [r.uby.dev](https://r.uby.dev) website. Expect some rough edges before
@@ -55,12 +55,12 @@ a JSON blob that can be optimized to use `jsonb` on postgres.
 require "roda"
 require "roda-llm"
 
-class Theo < ActiveRecord::Base
-  acts_as_agent do |agent|
-    agent.set name: "theo",
-              description: "a chatbot for the r.uby.dev website",
+class Roff < ActiveRecord::Base
+  acts_as_agent(format: :jsonb) do |agent|
+    agent.set name: "roff",
+              description: "an agent that specializes in reading man pages",
               instructions: proc { File.read("prompt.md") },
-              tools: :tools
+              tools: :man_tools
   end
 
   private
@@ -69,8 +69,8 @@ class Theo < ActiveRecord::Base
     LLM.deepseek
   end
 
-  def tools
-    [Theo::Tools::ReadMan, Theo::Tools::SearchMan]
+  def man_tools
+    [Roff::Tools::ReadMan, Roff::Tools::SearchMan]
   end
 end
 ```
@@ -93,7 +93,7 @@ resolver can write down what the conversation came to.
 ```ruby
 class App < Roda
   plugin :sessions, secret: ENV["SESSION_SECRET"]
-  plugin :agent, agents: [{class: Theo, resolver: LLM::Roda::Resolver::Session}]
+  plugin :agent, agents: [{class: Roff, resolver: LLM::Roda::Resolver::Session}]
 
   route do |r|
     r.agent!
@@ -121,7 +121,7 @@ element, and slots in whatever it wants to override:
 ```html
 <script src="/roda-llm/htmlelement.js"></script>
 
-<agent-console agent="theo">
+<agent-console agent="roff">
   <div slot="placeholder">
     <p>Ask me anything about the 4.4BSD manual.</p>
   </div>
@@ -309,7 +309,7 @@ class UserResolver < LLM::Roda::Resolver
 end
 
 class App < Roda
-  plugin :agent, agents: [{class: Theo, resolver: UserResolver}]
+  plugin :agent, agents: [{class: Roff, resolver: UserResolver}]
 end
 run App
 ```
@@ -330,7 +330,7 @@ overriden.
 A custom stream can subclass it and override just the parts you need:
 
 ```ruby
-class Theo::Stream < LLM::Roda::Stream
+class Roff::Stream < LLM::Roda::Stream
   def on_reasoning_content(content)
     ##
     # By default roda-llm does not implement this hook.
@@ -349,7 +349,7 @@ class Theo::Stream < LLM::Roda::Stream
 end
 
 class App < Roda
-  plugin :agent, agents: [{class: Theo, stream: Theo::Stream}]
+  plugin :agent, agents: [{class: Roff, stream: Roff::Stream}]
 end
 run App
 ```
@@ -371,8 +371,8 @@ not call them directly.
 
 ```ruby
 route do |r|
-  post(true) { r.create_agent!("Theo") }
-  delete(true) { r.destroy_agent!("Theo") }
+  post(true) { r.create_agent!("Roff") }
+  delete(true) { r.destroy_agent!("Roff") }
 end
 ```
 
