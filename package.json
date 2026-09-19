@@ -6,7 +6,7 @@
   "scripts": {
     "build": "esbuild lib/roda/plugins/agent/assets/htmlelement.js --bundle --minify --format=iife --outfile=public/roda-llm/htmlelement.js",
     "watch": "esbuild lib/roda/plugins/agent/assets/htmlelement.js --bundle --minify --format=iife --outfile=public/roda-llm/htmlelement.js --watch",
-    "test:jsdom": "node test/jsdom/real_test.mjs && node test/jsdom/overlap_test.mjs && node test/jsdom/slow_test.mjs"
+    "test:jsdom": "node test/jsdom/real_test.mjs && node test/jsdom/overlap_test.mjs && node test/jsdom/slow_test.mjs && node test/jsdom/stuck_test.mjs"
   },
   "dependencies": {
     "marked": "^15.0.0",
