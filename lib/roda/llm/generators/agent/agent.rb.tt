@@ -1,0 +1,34 @@
+# frozen_string_literal: true
+
+class Raven::Agent
+  ##
+  # The {Raven::Agent::<%= const %> Raven::Agent::<%= const %>} agent.
+  #
+  # TODO: say what it is for and what environment it expects to
+  # run in. The description is what the site shows.
+  class <%= const %> < self
+    acts_as_agent(format: :jsonb) do |agent|
+      agent.set name: "<%= name %>",
+                description: "<%= const %> is an agent that ...",
+                instructions: proc { File.read(File.join(__dir__, "<%= name %>", "prompt.md")) },
+                tools: :tools,
+                concurrency: :async,
+
+                ##
+                # The maximum number of tool calls per-turn.
+                tool_budget: 25,
+
+                ##
+                # The default tracer that all agents have associated
+                # with them. The tracer exports a trace to a couple of
+                # SQL tables.
+                tracer: proc { Raven::Tracer::SQL.new(llm, agent: self) }
+    end
+
+    ##
+    # @return [Array<LLM::Tool>]
+    def tools
+      []
+    end
+  end
+end

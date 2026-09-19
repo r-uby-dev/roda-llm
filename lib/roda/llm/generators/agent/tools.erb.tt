@@ -1,0 +1,9 @@
+<%%#
+  The icons every tool's call and return use, then one pair of lines per
+  tool. Add a pair for each tool the agent has:
+
+    <span slot="tool.NAME.call">Doing the thing&hellip;</span>
+    <span slot="tool.NAME.return">Did the thing</span>
+%>
+<img slot="tool.*.call-icon" src="/images/rubydev.svg" alt="">
+<img slot="tool.*.return-icon" src="/images/rubydev.svg" alt="">
